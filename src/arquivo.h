@@ -11,7 +11,7 @@ typedef struct cab{
 
 typedef struct arq{
     FILE *f;
-    CABECALHO *cab;
+    CABECALHO cab;
     int tam_bloco;
 }ARQ_BIN;
 
@@ -33,4 +33,7 @@ void ler_bloco(ARQ_BIN* arq, int pos, void *p) ;
 // Pós-condição: produto salvo no arquivo de dados
 void grava_bloco(ARQ_BIN* arq, void *p, int pos) ;
 
+int aloca_bloco(ARQ_BIN* arq);
+
+void libera_bloco(ARQ_BIN* arq, int pos);
 #endif

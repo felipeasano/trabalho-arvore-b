@@ -3,6 +3,12 @@
 
 #include "arquivo.h"
 
+
+void grava_cabecalho(ARQ_BIN* arq){
+    fseek(arq->f, 0, SEEK_SET);
+    fwrite(&arq->cab, sizeof(CABECALHO), 1, arq->f);
+}
+
 // pre-condicao: nenhuma
 // pos-condicao: nenhuma
 // Entrada: Entra com nome do arquivo e a estrutura para arquivo .bin
@@ -13,10 +19,10 @@ void abre_arq_bin(char nome_arquivo[], ARQ_BIN *b, int tam_bloco){
     if(b->f == NULL){
         //printf("Novo banco aberto!\n");
         b->f = fopen(nome_arquivo, "w+b");
-        b->cab->livre = -1;
-        b->cab->raiz = -1;
-        b->cab->topo = 0;
-        fwrite(&b->cab, sizeof(b->cab), 1, b->f);
+        b->cab.livre = -1;
+        b->cab.raiz = -1;
+        b->cab.topo = 0;
+        grava_cabecalho(b);
     }else{
         //printf("Banco aberto!\n");
         fseek(b->f, 0, SEEK_SET);
@@ -48,5 +54,26 @@ void grava_bloco(ARQ_BIN* arq, void *p, int pos) {
     fwrite(p, arq->tam_bloco, 1, arq->f);
 }
 
+int aloca_bloco(ARQ_BIN* arq){
+    int pos;
+    if(arq->cab.livre == -1){
+        pos = arq->cab.topo;
+        arq->cab.topo++;
+        grava_cabecalho(arq);
+        return pos;
+    }
+    pos = arq->cab.livre;
+    set_pos(arq, pos);
+    fread(&arq->cab.livre, sizeof(int), 1, arq->f);
+    grava_cabecalho(arq);
+    return pos;
+}
 
+void libera_bloco(ARQ_BIN* arq, int pos){
+
+    set_pos(arq, pos);
+    fwrite(&arq->cab.livre, sizeof(int), 1, arq->f);
+    arq->cab.livre = pos;
+    grava_cabecalho(arq);
+}
 #endif
