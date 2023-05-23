@@ -9,6 +9,7 @@ int main(){
     abre_arq_bin("dados.bin", &arq_dados, sizeof(PRODUTO));
 
     int opcao;
+    PRODUTO p;
 
     while(1){
         //system("cls");
@@ -24,7 +25,8 @@ int main(){
         switch (opcao) {
             case 1:
                 //cadastrar_produto(&arq_dados, &arq_indices);
-                
+                p = cria_novo_produto();
+                insere(&arq_indices, p.cod, aloca_bloco(&arq_indices));
                 break;
             case 2:
                 //removerProduto();

@@ -27,7 +27,6 @@ void imprime_produto(PRODUTO* produto) {
     printf("Categoria: %s\n", produto->categoria);
     printf("Estoque: %d\n", produto->estoque);
     printf("Preco: %s\n", produto->preco);
-    printf("Livre: %d\n", produto->livre);
 }
 
 void imprime_no(NO* no){
@@ -36,6 +35,28 @@ void imprime_no(NO* no){
         printf("%d ", no->chaves[i]);
     }
     printf("] ");
+}
+
+PRODUTO cria_novo_produto(){
+    PRODUTO p;
+    printf("Insira os dados do Produto:\n");
+    printf("Codigo: ");
+    scanf("%d%*c", &p.cod);
+    printf("Nome: ");
+    fgets(p.nome, 50, stdin);
+    p.nome[strcspn(p.nome,"\n")] = '\0';
+    printf("Marca: ");
+    fgets(p.marca, 30, stdin);
+    p.marca[strcspn(p.marca,"\n")] = '\0';
+    printf("Categoria: ");
+    fgets(p.categoria, 50, stdin);
+    p.categoria[strcspn(p.categoria,"\n")] = '\0';
+    printf("Estoque: ");
+    scanf("%d%*c", &p.estoque);
+    printf("Preco: ");
+    fgets(p.preco, 10, stdin);
+    p.preco[strcspn(p.preco,"\n")] = '\0';
+    return p;
 }
 
 #endif

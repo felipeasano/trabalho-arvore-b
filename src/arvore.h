@@ -21,7 +21,6 @@ typedef struct produto{
     char categoria[50];
     int estoque;
     char preco[10];
-    int livre; 
 }PRODUTO;
 
 // Veritica se o nó fornecido é folha
