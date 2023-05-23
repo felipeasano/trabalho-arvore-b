@@ -15,6 +15,8 @@ typedef struct arq{
     int tam_bloco;
 }ARQ_BIN;
 
+void grava_cabecalho(ARQ_BIN* arq);
+
 // pre-condicao: nenhuma
 // pos-condicao: nenhuma
 // Entrada: Entra com nome do arquivo e a estrutura para arquivo .bin
