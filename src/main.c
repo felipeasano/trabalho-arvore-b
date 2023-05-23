@@ -24,6 +24,7 @@ int main(){
         switch (opcao) {
             case 1:
                 //cadastrar_produto(&arq_dados, &arq_indices);
+                
                 break;
             case 2:
                 //removerProduto();
