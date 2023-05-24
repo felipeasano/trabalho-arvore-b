@@ -13,8 +13,8 @@ PRODUTO cria_novo_produto();
 
 void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados);
 
-void incluiLote(FILE *fr);
+void incluiLote(FILE *fr, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados);
 
-void loadPath();
+void loadPath(ARQ_BIN* arq_indices, ARQ_BIN* arq_dados);
 
 #endif

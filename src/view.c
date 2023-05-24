@@ -72,26 +72,22 @@ void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
 //Realiza inclusoes em lote
 //Pre-condicao: Arquivo txt com comandos e informacoes aberto
 //Pos-condicao: Inclusoes, alteracoes e remocoes do arquivo efetuadas
-void incluiLote(FILE *fr) {
-    char text[300], *aux = NULL, *pt = NULL;
-    PRODUTO *p = (PRODUTO *) malloc(sizeof(PRODUTO));
+void incluiLote(FILE *fr, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados) {
+    char text[300], *pt = NULL;
+    PRODUTO p;
     while (fscanf(fr, "%[^\n]%*c", text) != EOF) {
         //FILE *f = openBin();
         char *token = strtok(text, ";"); // pega o tipo
         if (strcmp(token, "I") == 0) {
-            p->cod = atoi(strtok(NULL, ";"));
-            strcpy(p->nome, strtok(NULL, ";"));
-            strcpy(p->marca, strtok(NULL, ";"));
-            strcpy(p->categoria, strtok(NULL, ";"));
-            p->estoque = atoi(strtok(NULL, ";"));
-            strcpy(p->preco, strtok(NULL, ";"));
-            /*PRODUTO *aux = buscaProduto(f, p->id);
-            if (aux == NULL) {
-                //insereProduto(p);
-                printf("Produto com ID [%d] cadastrado!\n", p->cod);
-            } else
-                printf("ID [%d] ja existente! \n", p->cod);
-            free(aux);*/
+            printf("Insercao\n");
+            p.cod = atoi(strtok(NULL, ";"));
+            strcpy(p.nome, strtok(NULL, ";"));
+            strcpy(p.marca, strtok(NULL, ";"));
+            strcpy(p.categoria, strtok(NULL, ";"));
+            p.estoque = atoi(strtok(NULL, ";"));
+            strcpy(p.preco, strtok(NULL, ";"));
+            //Funcao de insercao ja verifica produtos repetidos
+            insere_produto(&p, arq_indices, arq_dados);
         }
 
         else if (strcmp(token, "R") == 0) {
@@ -101,10 +97,11 @@ void incluiLote(FILE *fr) {
         }
 
         else if (strcmp(token, "A") == 0) {
+            printf("Alteracao\n");
             int info;
             char aux1[16] = "", aux2[16] = "", *ptr = text;
             ptr += 2;
-            sscanf(ptr, "%d", &p->cod);
+            sscanf(ptr, "%d", &p.cod);
             ptr = &ptr[strcspn(ptr, ";") + 1];
             sscanf(ptr, "%[^;]", aux1);
             ptr = &ptr[strcspn(ptr, ";") + 1];
@@ -113,9 +110,6 @@ void incluiLote(FILE *fr) {
                 //atualizaEstoque(p->id, atoi(aux1));
             }
             if (strcmp(aux2, "")) {
-                for (ptr = aux2; *ptr != 0; ptr++)
-                    if (*ptr == ',')
-                        *ptr = '.';
                 //atualizaPreco(p->id, atof(aux2));
             }
         }
@@ -123,14 +117,13 @@ void incluiLote(FILE *fr) {
             printf("Entrada não reconhecida! \n");
         }
     }
-    free(p);
     fclose(fr);
 }
 
 //Le o caminho do arquivo passado por input, e cadastra os itens nele
 //Pre-condicao: Um caminho para um arquivo existente
 //Pos-condicao: Registro dos itens nos arquivos binarios
-void loadPath(){
+void loadPath(ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
     FILE *fr;
     char path[50];
     do{
@@ -139,7 +132,7 @@ void loadPath(){
         fr = fopen(path, "r");
     }
     while(fr == NULL);
-    incluiLote(fr);
+    incluiLote(fr, arq_indices, arq_dados);
     printf("\n");
     fclose(fr);
 }
