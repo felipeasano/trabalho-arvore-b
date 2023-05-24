@@ -146,7 +146,6 @@ int retorna_livre(ARQ_BIN* arq_index){
 //                na posição "posY". Retorna "posY", além do elemento do meio do nó onde ocorreu o split
 int split(ARQ_BIN* arq_index, int posX, int *m, int *m_ptDado) {
     int posY = retorna_livre(arq_index);
-    //int posY = cab->topo;
     NO y;
     NO x;
     ler_bloco(arq_index, posX, &x);
@@ -166,6 +165,7 @@ int split(ARQ_BIN* arq_index, int posX, int *m, int *m_ptDado) {
     grava_bloco(arq_index, &x, posX);
     if(posY == arq_index->cab.topo)
         arq_index->cab.topo++; //A função que chamou a split salva a atualização no arquivo
+        //grava_cabecalho(arq_index);
     return posY;
 }
 
@@ -207,6 +207,7 @@ int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado){
             if(eh_overflow(&filho_pos)){
                 int m, m_ptdado;
                 int pos_aux = split(arq_index, r.filhos[pos], &m, &m_ptdado);
+                //printf("pos_aux = %d\n", pos_aux);
                 adiciona_direita(&r, pos, m, m_ptdado, pos_aux);
             }
         }
