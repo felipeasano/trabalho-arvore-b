@@ -15,4 +15,6 @@ PRODUTO cria_novo_produto();
 
 void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados);
 
+void incluiLote(FILE *fr);
+
 #endif

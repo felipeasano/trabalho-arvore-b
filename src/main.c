@@ -29,14 +29,14 @@ int main(){
         //system("cls");
         imprime_menu();
         scanf("%d", &opcao);
-        if(opcao == 0){
-            fecha_arq_bin(&arq_indices);
-            fecha_arq_bin(&arq_dados);
-            printf("Fim do Programa\n");
-            break;
-        }
+
         imprime_cab(&arq_indices);
         switch (opcao) {
+            case 0:
+                fecha_arq_bin(&arq_indices);
+                fecha_arq_bin(&arq_dados);
+                printf("Fim do Programa\n");
+                return 0;
             case 1:
                 //cadastrar_produto(&arq_dados, &arq_indices);
                 p = cria_novo_produto();
@@ -78,5 +78,4 @@ int main(){
         system("pause");
     }
 
-    return 0;
 }

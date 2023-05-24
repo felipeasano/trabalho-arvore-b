@@ -77,4 +77,63 @@ void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
     grava_cabecalho(arq_dados);
 }
 
+//Realiza inclusoes em lote
+//Pre-condicao: Arquivo txt com comandos e informacoes aberto
+//Pos-condicao: Inclusoes, alteracoes e remocoes do arquivo efetuadas
+void incluiLote(FILE *fr) {
+    char text[300], *aux = NULL, *pt = NULL;
+    PRODUTO *p = (PRODUTO *) malloc(sizeof(PRODUTO));
+    while (fscanf(fr, "%[^\n]%*c", text) != EOF) {
+        //FILE *f = openBin();
+        char *token = strtok(text, ";"); // pega o tipo
+        if (strcmp(token, "I") == 0) {
+            p->cod = atoi(strtok(NULL, ";"));
+            strcpy(p->nome, strtok(NULL, ";"));
+            strcpy(p->marca, strtok(NULL, ";"));
+            strcpy(p->categoria, strtok(NULL, ";"));
+            p->estoque = atoi(strtok(NULL, ";"));
+            strcpy(p->preco, strtok(NULL, ";"));
+            /*PRODUTO *aux = buscaProduto(f, p->id);
+            if (aux == NULL) {
+                //insereProduto(p);
+                printf("Produto com ID [%d] cadastrado!\n", p->cod);
+            } else
+                printf("ID [%d] ja existente! \n", p->cod);
+            free(aux);*/
+        }
+
+        else if (strcmp(token, "R") == 0) {
+            /*int info;
+            info = atoi(strtok(NULL, ";"));
+            removeProduto(info);*/
+        }
+
+        else if (strcmp(token, "A") == 0) {
+            int info;
+            char aux1[16] = "", aux2[16] = "", *ptr = text;
+            ptr += 2;
+            sscanf(ptr, "%d", &p->cod);
+            ptr = &ptr[strcspn(ptr, ";") + 1];
+            sscanf(ptr, "%[^;]", aux1);
+            ptr = &ptr[strcspn(ptr, ";") + 1];
+            sscanf(ptr, "%[^\n]", aux2);
+            if (strcmp(aux1, "")) {
+                //atualizaEstoque(p->id, atoi(aux1));
+            }
+            if (strcmp(aux2, "")) {
+                for (ptr = aux2; *ptr != 0; ptr++)
+                    if (*ptr == ',')
+                        *ptr = '.';
+                //atualizaPreco(p->id, atof(aux2));
+            }
+        }
+        else {
+            printf("Entrada não reconhecida! \n");
+        }
+    }
+    free(p);
+    fclose(fr);
+}
+
+
 #endif
