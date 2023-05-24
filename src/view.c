@@ -61,11 +61,17 @@ PRODUTO cria_novo_produto(){
 
 void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
 
-    if(insere(arq_indices, p->cod, arq_dados->cab.topo)){
+    int pos_inserir = aloca_bloco(arq_dados);
+    if(insere(arq_indices, p->cod, pos_inserir)){
         grava_bloco(arq_dados, p, arq_dados->cab.topo);
-        arq_dados->cab.topo++;
+        if(pos_inserir == arq_dados->cab.topo){
+            arq_dados->cab.topo++;
+        }
         printf("Produto inserido com sucesso\n");
     }else{
+        if(arq_dados->cab.livre != -1){
+            arq_dados->cab.livre = pos_inserir;
+        }
         printf("Codigo [%d] ja cadastrado\n");
     }
     grava_cabecalho(arq_dados);

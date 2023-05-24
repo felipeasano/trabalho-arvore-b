@@ -142,7 +142,7 @@ int insere(ARQ_BIN* arq_index, int chave, int ptdado){
         NO raiz;
         ler_bloco(arq_index, arq_index->cab.raiz, &raiz);
         if(eh_overflow(&raiz)){
-        puts("AQ!\n");
+            puts("AQ!\n");
             int m, m_ptdado, pos_livre;
             int posx = split(arq_index, arq_index->cab.raiz, &m, &m_ptdado);
             NO nova_raiz;

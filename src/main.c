@@ -35,14 +35,14 @@ int main(){
             printf("Fim do Programa\n");
             break;
         }
-        imprime_cab(&arq_dados);
-        printf("\n");
         imprime_cab(&arq_indices);
         switch (opcao) {
             case 1:
                 //cadastrar_produto(&arq_dados, &arq_indices);
                 p = cria_novo_produto();
+
                 insere_produto(&p, &arq_indices, &arq_dados);
+                //imprime_cab(&arq_indices);
                 break;
             case 2:
                 //removerProduto();
