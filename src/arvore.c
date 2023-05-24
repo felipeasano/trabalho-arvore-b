@@ -119,7 +119,8 @@ int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado){
             }
         }
     }
-    grava_cabecalho(arq_index);
+    grava_bloco(arq_index, &r, pos_arquivo);
+    //grava_cabecalho(arq_index);
     return foi_inserido;
 }
 
