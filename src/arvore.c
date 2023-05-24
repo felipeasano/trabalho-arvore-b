@@ -24,6 +24,98 @@ int eh_underflow(NO* no){
     return no->numChaves < ORDEM/2;
 }
 
+FILA* cria_fila(){
+    FILA *f = (FILA*)malloc(sizeof(FILA));
+    f->inicio = NULL;
+    f->fim = NULL;
+    return f;
+}
+
+//pré-requisitos: Recebe um ponteiro não nulo para fila
+//pós-requisitos: Retorna 1 se a fila for vazio e 0 se não
+int fila_vazia(FILA *f){
+    return f->inicio == NULL;
+}
+
+//pré-requisitos: Um ponteiro não nulo para fila
+//pós-requisitos: a quantidade de elementos na fila é retornado
+int fila_tam(FILA *f){
+    NO_FILA* aux = f->inicio;
+    int i = 0;
+    while(aux){
+        i++;
+        aux = aux->prox;
+    }
+    return i;
+}
+
+void enqueue(FILA *f, NO* noB){
+    NO_FILA* aux = (NO_FILA*)malloc(sizeof(NO_FILA));
+    aux->noB = noB;
+    aux->prox = NULL;
+    if(fila_vazia(f)){
+        f->inicio = aux;
+    }else{
+        f->fim->prox = aux;
+    }
+    f->fim = aux;
+}
+
+NO* dequeue(FILA* f){
+    if(!fila_vazia(f)){
+        NO* x;
+        NO_FILA* aux = f->inicio;
+        x = f->inicio->noB;
+        if(f->inicio == f->fim){
+            f->fim = NULL;
+        }
+        f->inicio = f->inicio->prox;
+        free(aux);
+        return x;
+    }
+    return NULL;
+}
+
+void imprime_noB(NO* no){
+    printf("- [ ");
+    for(int i = 0; i < no->numChaves; i++){
+        printf("%d", no->chaves[i]);
+        if(i+1 < no->numChaves) printf(" | ");
+    }
+    printf("] - ");
+}
+
+void imprime_por_niveis(ARQ_BIN* arq_index){
+
+    if(arq_index->cab.raiz == -1){
+        printf("Arvore Vazia!\n");
+        return;
+    }
+
+    int i;
+    FILA* fila = cria_fila();
+    NO r, *aux;
+    printf("raiz->%d", arq_index->cab.raiz);
+    ler_bloco(arq_index, arq_index->cab.raiz, &r);
+                puts("aq");
+    enqueue(fila, &r);
+    while(!fila_vazia(fila)){
+        int n = fila_tam(fila);
+        while(n > 0){
+            aux = dequeue(fila);
+            imprime_noB(aux);
+            for(i = 0; i < aux->numChaves+1 && !eh_folha(aux); i++){
+                ler_bloco(arq_index, aux->filhos[i], &r);
+                enqueue(fila, &r);
+            }
+            n--;
+            free(aux);
+        }
+        printf("\n");
+    }
+    free(fila);
+}
+
 NO* cria_no(){
     NO* no = (NO*)malloc(sizeof(NO));
     no->numChaves = 0;
@@ -143,7 +235,6 @@ int insere(ARQ_BIN* arq_index, int chave, int ptdado){
         NO raiz;
         ler_bloco(arq_index, arq_index->cab.raiz, &raiz);
         if(eh_overflow(&raiz)){
-            puts("AQ!\n");
             int m, m_ptdado, pos_livre;
             int posx = split(arq_index, arq_index->cab.raiz, &m, &m_ptdado);
             NO nova_raiz;

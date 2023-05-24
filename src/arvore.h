@@ -23,6 +23,16 @@ typedef struct produto{
     char preco[10];
 }PRODUTO;
 
+typedef struct no_fila{
+    NO* noB;
+    struct no_fila* prox;
+}NO_FILA;
+
+typedef struct fila{
+    NO_FILA* inicio;
+    NO_FILA* fim;
+}FILA;
+
 // Veritica se o nó fornecido é folha
 // Pré-condição: Ponteiro para manipulador de indices válido
 // Pós-condição: Nenhuma
@@ -37,6 +47,8 @@ int eh_overflow(NO* no);
 // Pré-condição: Ponteiro para nó válido
 // Pós-condição: Nenhuma
 int eh_underflow(NO* no);
+
+void imprime_por_niveis(ARQ_BIN* arq_index);
 
 NO* cria_no();
 

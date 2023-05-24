@@ -62,6 +62,7 @@ int main(){
                 break;
             case 7:
                 //imprimirArvore();
+                imprime_por_niveis(&arq_indices);
                 break;
             case 8:
                 //imprimirListaLivresIndices();

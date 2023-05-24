@@ -29,14 +29,6 @@ void imprime_produto(PRODUTO* produto) {
     printf("Preco: %s\n", produto->preco);
 }
 
-void imprime_no(NO* no){
-    printf("[ ");
-    for (int i = 0; i < no->numChaves; i++) {
-        printf("%d ", no->chaves[i]);
-    }
-    printf("] ");
-}
-
 PRODUTO cria_novo_produto(){
     PRODUTO p;
     printf("Insira os dados do Produto:\n");
