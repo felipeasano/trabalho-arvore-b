@@ -59,4 +59,16 @@ PRODUTO cria_novo_produto(){
     return p;
 }
 
+void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
+
+    if(insere(arq_indices, p->cod, arq_dados->cab.topo)){
+        grava_bloco(arq_dados, p, arq_dados->cab.topo);
+        arq_dados->cab.topo++;
+        printf("Produto inserido com sucesso\n");
+    }else{
+        printf("Codigo [%d] ja cadastrado\n");
+    }
+    grava_cabecalho(arq_dados);
+}
+
 #endif

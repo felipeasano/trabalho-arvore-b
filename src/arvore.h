@@ -40,54 +40,16 @@ int eh_underflow(NO* no);
 
 NO* cria_no();
 
-// Função recursiva para encontrar a referencia da chave passada
-// Pré-condição: Ponteiro para manipulador de arvore
-// Pós-condição: Retorna o numero da referencia da chave caso seja encontrada,
-// caso contrario, -1 é retornado
-static int busca_aux(ARQ_BIN* arq_index, int filePos, int key, int *pos);
+int retorna_livre(ARQ_BIN* arq_index);
 
-// Procura a referencia da chave fornecida na arvore B
-// Pré-condição: Ponteiro para manipulador de arvore válido
-// Pós-condição: Retorna a referencia da chave, caso não seja encontrada,
-// -1 é retornado
-int busca(ARQ_BIN* arq_index, int key);
+int split(ARQ_BIN* arq_index, int posX, int *m, int *m_ptDado);
 
-// Busca a posicao em que a chave esta ou estaria no nó
-// Pré-condição: Ponteiro para nó valido
-// Pós-condição: Retorna 1 caso chave esteja no nó e 0 caso contrario
-int busca_pos_chave(NO *no, int chave, int *pos);
+int buscaPos(NO* r, int info, int * pos);
 
-// Adiciona a chave e referencia posição fornecida no nó fornecido, adicionando
-// o filho fornecio a direita
-// Pré-condição: Ponteiro para nó valido
-// Pós-condição: Nó modificado
-void addToRight(NO *no, int pos, int chave, int registro, int rightChild);
+void adiciona_direita(NO* r, int pos_inserido, int chave, int ptdado, int pos_novo_no);
 
-// Adiciona a chave e referencia posição fornecida no nó fornecido, adicionando
-// o filho fornecio a esquerda
-// Pré-condição: Ponteiro para nó valido
-// Pós-condição: Nó modificado
-void addToLeft(NO *no, int pos, int chave, int registro, int leftChild);
+int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado);
 
-// Adiciona novo nó ao arquivo de indices, caso nenhuma posiçao livre exista
-// o nó é adicionado no topo do arquivo, caso contrario a posicao livre é utilizada
-// Pré-condição: Ponteiro para manipulador de indices valido e ponteiro para nó
-// Pós-condição: Retorna a posição do nó no arquivo de indices
-int add_no(ARQ_BIN* arq_index, NO *no);
-
-NO* split(NO* over_no, int *chave_med, int *registro_med);
-
-// Função recursiva para inserir chave na arvore B, busca a posicao de insercao e
-// corrige nós em overflow
-// Pré-condição: Ponteiro para manipulador de arvore válido
-// Pós-condição: Retorna o nó da posição fornecida com as modificações necessárias
-NO* insere_aux(ARQ_BIN* arq_index, int pos_no, int chave, int registro);
-
-// Insere uma chave e uma referencia na arvore B realizando as devidas
-// correçoes caso o nó fiquem em overflow
-// Pré-condição: Ponteiro para manipulador de arvore válido
-// Pós-condição: Chave e referencia adicionadas
-void insere(ARQ_BIN* arq_index, int cod, int registro);
-
+int insere(ARQ_BIN* arq_index, int chave, int ptdado);
 
 #endif

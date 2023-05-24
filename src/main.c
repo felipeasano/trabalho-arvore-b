@@ -1,5 +1,11 @@
 #include "view.h"
 
+void imprime_cab(ARQ_BIN* b){
+    printf("raiz:  %d\n", b->cab.raiz);
+    printf("topo:  %d\n", b->cab.topo);
+    printf("livre: %d\n", b->cab.livre);
+}
+
 int main(){
     
     ARQ_BIN arq_indices;
@@ -10,6 +16,14 @@ int main(){
 
     int opcao;
     PRODUTO p;
+    NO no;
+    ler_bloco(&arq_indices, 0, &no);
+
+    printf("chaves: ");
+    for(int i = 0; i < ORDEM; i++){
+        printf("%d |", no.chaves[i]);
+    }
+    printf("\nNumChaves: %d\n", no.numChaves);
 
     while(1){
         //system("cls");
@@ -21,12 +35,14 @@ int main(){
             printf("Fim do Programa\n");
             break;
         }
-
+        imprime_cab(&arq_dados);
+        printf("\n");
+        imprime_cab(&arq_indices);
         switch (opcao) {
             case 1:
                 //cadastrar_produto(&arq_dados, &arq_indices);
                 p = cria_novo_produto();
-                insere(&arq_indices, p.cod, aloca_bloco(&arq_indices));
+                insere_produto(&p, &arq_indices, &arq_dados);
                 break;
             case 2:
                 //removerProduto();

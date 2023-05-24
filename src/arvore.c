@@ -33,199 +33,141 @@ NO* cria_no(){
     return no;
 }
 
-// Função recursiva para encontrar a referencia da chave passada
-// Pré-condição: Ponteiro para manipulador de arvore
-// Pós-condição: Retorna o numero da referencia da chave caso seja encontrada,
-// caso contrario, -1 é retornado
-static int busca_aux(ARQ_BIN* arq_index, int filePos, int key, int *pos) {
-    if (filePos == -1)
-        return -1;
-    NO no;
-    ler_bloco(arq_index, filePos, &no);
+//pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
+//                cabeçalho de indices gravado
+//pós-requisitos: Retorna a posição onde o novo dado dever ser inserido
+int retorna_livre(ARQ_BIN* arq_index){
 
+    NO *aux;
+    if(arq_index->cab.livre == -1) return arq_index->cab.topo;
+    else{
+        int retorno = arq_index->cab.livre;
+        ler_bloco(arq_index, arq_index->cab.livre, &aux);
+        arq_index->cab.livre = aux->filhos[0];
+        return retorno;
+    }
+}
+
+//pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos 1 nó
+//                gravado e o cabeçalho
+//pós-requisitos: A partir do no gravado na posição "posX" faz o split do nó e salva esse novo nó
+//                na posição "posY". Retorna "posY", além do elemento do meio do nó onde ocorreu o split
+int split(ARQ_BIN* arq_index, int posX, int *m, int *m_ptDado) {
+    int posY = retorna_livre(arq_index);
+    //int posY = cab->topo;
+    NO y;
+    NO x;
+    ler_bloco(arq_index, posX, &x);
+    int q = x.numChaves/2;
+    y.numChaves = x.numChaves - q - 1;
+    x.numChaves = q;
+    *m = x.chaves[q]; // chave mediana
+    *m_ptDado = x.registro[q];
     int i = 0;
-    while (i < no.numChaves && no.chaves[i] < key) {
-        i++;
+    y.filhos[0] = x.filhos[q+1];
+    for(i = 0; i < y.numChaves; i++){
+        y.chaves[i] = x.chaves[q+i+1];
+        y.registro[i] = x.registro[q+i+1];
+        y.filhos[i+1] = x.filhos[q+i+2];
     }
-    if (i + 1 > no.numChaves || no.chaves[i] > key)
-        return busca_aux(arq_index, no.filhos[i], key, pos);
-    *pos = i;
-    return filePos;
+    grava_bloco(arq_index, &y, posY);
+    grava_bloco(arq_index, &x, posX);
+    if(posY == arq_index->cab.topo)
+        arq_index->cab.topo++; //A função que chamou a split salva a atualização no arquivo
+    return posY;
 }
 
-// Procura a referencia da chave fornecida na arvore B
-// Pré-condição: Ponteiro para manipulador de arvore válido
-// Pós-condição: Retorna a referencia da chave, caso não seja encontrada,
-// -1 é retornado
-int busca(ARQ_BIN* arq_index, int key) {
-    int pos, registro;
-
-    if (arq_index->cab.raiz == -1)
-        registro = -1;
-    else
-        registro = busca_aux(arq_index, arq_index->cab.raiz, key, &pos);
-
-    if (registro != -1) {
-        NO no;
-        ler_bloco(arq_index, registro, &no);
-        registro = no.registro[pos];
-    }
-    return registro;
-}
-
-// Busca a posicao em que a chave esta ou estaria no nó
-// Pré-condição: Ponteiro para nó valido
-// Pós-condição: Retorna 1 caso chave esteja no nó e 0 caso contrario
-int busca_pos_chave(NO *no, int chave, int *pos) {
-    for ((*pos) = 0; (*pos) < no->numChaves; (*pos)++) {
-        if (chave == no->chaves[(*pos)])
+int buscaPos(NO* r, int info, int * pos) {
+    for((*pos)=0; (*pos) < r->numChaves; (*pos)++)
+        if(info == r->chaves[(*pos)])
             return 1;
-        else if (chave < no->chaves[(*pos)])
+        else if(info < r->chaves[(*pos)])
             break;
-    }
     return 0;
 }
 
-// Adiciona a chave e referencia posição fornecida no nó fornecido, adicionando
-// o filho fornecio a direita
-// Pré-condição: Ponteiro para nó valido
-// Pós-condição: Nó modificado
-void addToRight(NO *no, int pos, int chave, int registro, int rightChild) {
-    for (int i = no->numChaves; i > pos; i--) {
-        no->chaves[i] = no->chaves[i - 1];
-        no->registro[i] = no->registro[i - 1];
-        no->filhos[i + 1] = no->filhos[i];
+void adiciona_direita(NO* r, int pos_inserido, int chave, int ptdado, int pos_novo_no){
+    int i;
+    for(i = r->numChaves; i < pos_inserido; i--){
+        r->chaves[i] = r->chaves[i-1];
+        r->registro[i] = r->registro[i-1];
+        r->filhos[i+1] = r->filhos[i];
     }
-    no->chaves[pos] = chave;
-    no->registro[pos] = registro;
-    no->filhos[pos + 1] = rightChild;
-    no->numChaves++;
+    r->chaves[pos_inserido] = chave;
+    r->registro[pos_inserido] = ptdado;
+    r->filhos[pos_inserido+1] = pos_novo_no;
+    r->numChaves++;
 }
 
-// Adiciona a chave e referencia posição fornecida no nó fornecido, adicionando
-// o filho fornecio a esquerda
-// Pré-condição: Ponteiro para nó valido
-// Pós-condição: Nó modificado
-void addToLeft(NO *no, int pos, int chave, int registro, int leftChild) {
-    for (int i = no->numChaves; i > pos; i--) {
-        no->chaves[i] = no->chaves[i - 1];
-        no->registro[i] = no->registro[i - 1];
-        no->filhos[i + 1] = no->filhos[i];
-    }
-    no->filhos[pos+1] = no->filhos[pos];
-    no->chaves[pos] = chave;
-    no->registro[pos] = registro;
-    no->filhos[pos] = leftChild;
-    no->numChaves++;
-}
-
-// Adiciona novo nó ao arquivo de indices, caso nenhuma posiçao livre exista
-// o nó é adicionado no topo do arquivo, caso contrario a posicao livre é utilizada
-// Pré-condição: Ponteiro para manipulador de indices valido e ponteiro para nó
-// Pós-condição: Retorna a posição do nó no arquivo de indices
-int add_no(ARQ_BIN* arq_index, NO *no) {
+int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado){
     int pos;
-    if (arq_index->cab.livre == -1) {
-        pos = arq_index->cab.topo;
-        arq_index->cab.topo++;
-    } else {
-        pos = arq_index->cab.livre;
-        NO *aux;
-        ler_bloco(arq_index, arq_index->cab.livre, aux);
-        arq_index->cab.livre = aux->numChaves;
-        free(aux);
+    int foi_inserido = 0;
+    NO r;
+    ler_bloco(arq_index, pos_arquivo, &r);
+    if(!buscaPos(&r, chave, &pos)){
+        if(eh_folha(&r)){
+            adiciona_direita(&r, pos, chave, ptdado, -1);
+            foi_inserido = 1;
+        }else{
+            foi_inserido = insere_aux(arq_index, r.filhos[pos], chave, ptdado);
+            NO filho_pos;
+            ler_bloco(arq_index, r.filhos[pos], &filho_pos);
+            if(eh_overflow(&filho_pos)){
+                int m, m_ptdado;
+                int pos_aux = split(arq_index, r.filhos[pos], &m, &m_ptdado);
+                adiciona_direita(&r, pos, m, m_ptdado, pos_aux);
+            }
+        }
     }
-    grava_bloco(arq_index, no, pos);
     grava_cabecalho(arq_index);
-    return pos;
+    return foi_inserido;
 }
 
-NO* split(NO* over_no, int *chave_med, int *registro_med){
-    NO* novo_no = cria_no();
-    int q = over_no->numChaves/2;
-    novo_no->numChaves = over_no->numChaves-q-1;
-    *chave_med = over_no->chaves[q];
-    *registro_med = over_no->registro[q];
-    over_no->numChaves = q;
-    novo_no->filhos[0] = over_no->filhos[q+1];
-
-    for(int i = 0; i < novo_no->numChaves; i++){
-        novo_no->chaves[i] = over_no->chaves[q+i+1];
-        novo_no->registro[i] = over_no->registro[q+i+1];
-        novo_no->filhos[i+1] = over_no->filhos[q+i+2];
-    }
-    return novo_no;
-}
-
-// Função recursiva para inserir chave na arvore B, busca a posicao de insercao e
-// corrige nós em overflow
-// Pré-condição: Ponteiro para manipulador de arvore válido
-// Pós-condição: Retorna o nó da posição fornecida com as modificações necessárias
-NO* insere_aux(ARQ_BIN* arq_index, int pos_no, int chave, int registro){
-    int pos;
-    NO* no;
-    ler_bloco(arq_index, pos_no, no);
-
-    if(busca_pos_chave(no, chave, &pos)){
-        if(eh_folha(no)){
-            addToRight(no, pos, chave, registro, -1);
-        }else{
-            NO* aux = insere_aux(arq_index, no->filhos[pos], chave, registro);
-            if(eh_overflow(aux)){
-                int chave_med, registro_med;
-                NO* novo_no = split(aux, &chave_med, &registro_med);
-                int novo_registro = add_no(arq_index, novo_no);
-                addToRight(no, pos, chave_med, registro_med, novo_registro);
-                grava_bloco(arq_index, aux, no->filhos[pos]);
-                free(novo_no);
-            }
-            grava_bloco(arq_index, aux, no->filhos[pos]);
-            free(aux);
-        }
-    }
-    return no;
-}
-
-// Insere uma chave e uma referencia na arvore B realizando as devidas
-// correçoes caso o nó fiquem em overflow
-// Pré-condição: Ponteiro para manipulador de arvore válido
-// Pós-condição: Chave e referencia adicionadas
-void insere(ARQ_BIN* arq_index, int cod, int registro){
-    NO* no;
+int insere(ARQ_BIN* arq_index, int chave, int ptdado){
+    int foi_inserido = 0;
     if(arq_index->cab.raiz == -1){
+        NO raiz;
+        raiz.chaves[0] = chave;
+        raiz.registro[0] = ptdado;
+        for(int i = 0; i < ORDEM; i++){
+            raiz.filhos[i] = -1;
+        }
+        raiz.numChaves = 1;
+        grava_bloco(arq_index, &raiz, arq_index->cab.topo);
+        arq_index->cab.raiz = arq_index->cab.topo;
         arq_index->cab.topo++;
-        arq_index->cab.raiz = 0;
-        grava_cabecalho(arq_index);
-        no = cria_no();
-        no->chaves[0] = cod;
-        no->registro[0] = registro;
-        no->numChaves++;
-        grava_bloco(arq_index, no, 0);
+        foi_inserido = 1;
     }else{
-        no = insere_aux(arq_index, arq_index->cab.raiz, cod, registro);
-        if(eh_overflow(no)){
-            int chave_med;
-            int registro_med;
-            NO* aux = split(no, &chave_med, &registro_med);
-            int registro_aux = add_no(arq_index, aux);
-            NO* nova_raiz = cria_no();
-            nova_raiz->chaves[0] = chave_med;
-            nova_raiz->registro[0] = registro_med;
-            nova_raiz->filhos[0] = arq_index->cab.raiz;
-            nova_raiz->filhos[1] = registro_aux;
+        foi_inserido = insere_aux(arq_index, arq_index->cab.raiz, chave, ptdado);
+        NO raiz;
+        ler_bloco(arq_index, arq_index->cab.raiz, &raiz);
+        if(eh_overflow(&raiz)){
+        puts("AQ!\n");
+            int m, m_ptdado, pos_livre;
+            int posx = split(arq_index, arq_index->cab.raiz, &m, &m_ptdado);
+            NO nova_raiz;
+            nova_raiz.chaves[0] = m;
+            nova_raiz.registro[0] = m_ptdado;
+            nova_raiz.filhos[0] = arq_index->cab.raiz;
+            nova_raiz.filhos[1] = posx;
+            NO r;
+            ler_bloco(arq_index, arq_index->cab.raiz, &r);
+            for(int i = (((int)ORDEM/2)+1); i < ORDEM; i++)
+                r.filhos[i] = -1;
+            nova_raiz.numChaves = 1;
 
-            for(int i = (ORDEM/2)+1; i < ORDEM; i++){
-                no->filhos[i] = -1;
+            pos_livre = retorna_livre(arq_index);
+
+            grava_bloco(arq_index, &r, arq_index->cab.raiz);
+            grava_bloco(arq_index, &nova_raiz, pos_livre);
+            arq_index->cab.raiz = pos_livre;
+            if(pos_livre == arq_index->cab.topo){
+                arq_index->cab.topo++;
             }
-            nova_raiz->numChaves = 1;
-            int pos_raiz = add_no(arq_index, nova_raiz);
-            grava_bloco(arq_index, no, arq_index->cab.raiz);
-            arq_index->cab.raiz = pos_raiz;
-            grava_cabecalho(arq_index);
-        }else{
-            grava_bloco(arq_index, no, arq_index->cab.raiz);
         }
     }
-    free(no);
+    grava_cabecalho(arq_index);
+    return foi_inserido;
 }
+
 #endif
