@@ -135,5 +135,21 @@ void incluiLote(FILE *fr) {
     fclose(fr);
 }
 
+//Le o caminho do arquivo passado por input, e cadastra os itens nele
+//Pre-condicao: Um caminho para um arquivo existente
+//Pos-condicao: Registro dos itens nos arquivos binarios
+void loadPath(){
+    FILE *fr;
+    char path[50];
+    do{
+        printf("Nome do arquivo:");
+        scanf("%s%*c", path);
+        fr = fopen(path, "r");
+    }
+    while(fr == NULL);
+    incluiLote(fr);
+    printf("\n");
+    fclose(fr);
+}
 
 #endif

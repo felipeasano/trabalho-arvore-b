@@ -15,6 +15,7 @@ int main(){
     abre_arq_bin("dados.bin", &arq_dados, sizeof(PRODUTO));
 
     int opcao;
+    char path[40];
     PRODUTO p;
     NO no;
     ler_bloco(&arq_indices, 0, &no);
@@ -69,7 +70,7 @@ int main(){
                 //imprimirListaLivresDados();
                 break;
             case 10:
-                //realizarOperacoesLote();
+                loadPath();
                 break;
             default:
                 printf("Entrada invalida\n");
