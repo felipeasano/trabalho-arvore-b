@@ -70,7 +70,7 @@ int main(){
                 //imprimirListaLivresDados();
                 break;
             case 10:
-                loadPath();
+                loadPath(&arq_indices, &arq_dados);
                 break;
             default:
                 printf("Entrada invalida\n");
