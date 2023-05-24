@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "arquivo.h"
 
-#define ORDEM 7
+#define ORDEM 5
 
 typedef struct no{
     int numChaves;

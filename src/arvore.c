@@ -82,7 +82,7 @@ void imprime_noB(NO* no){
         printf("%d", no->chaves[i]);
         if(i+1 < no->numChaves) printf(" | ");
     }
-    printf("] - ");
+    printf(" ] - ");
 }
 
 void imprime_por_niveis(ARQ_BIN* arq_index){
@@ -130,12 +130,12 @@ NO* cria_no(){
 //pós-requisitos: Retorna a posição onde o novo dado dever ser inserido
 int retorna_livre(ARQ_BIN* arq_index){
 
-    NO *aux;
+    NO aux;
     if(arq_index->cab.livre == -1) return arq_index->cab.topo;
     else{
         int retorno = arq_index->cab.livre;
         ler_bloco(arq_index, arq_index->cab.livre, &aux);
-        arq_index->cab.livre = aux->filhos[0];
+        arq_index->cab.livre = aux.filhos[0];
         return retorno;
     }
 }
@@ -180,7 +180,7 @@ int buscaPos(NO* r, int info, int * pos) {
 
 void adiciona_direita(NO* r, int pos_inserido, int chave, int ptdado, int pos_novo_no){
     int i;
-    for(i = r->numChaves; i < pos_inserido; i--){
+    for(i = r->numChaves; i>pos_inserido; i--){
         r->chaves[i] = r->chaves[i-1];
         r->registro[i] = r->registro[i-1];
         r->filhos[i+1] = r->filhos[i];
@@ -212,7 +212,6 @@ int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado){
         }
     }
     grava_bloco(arq_index, &r, pos_arquivo);
-    //grava_cabecalho(arq_index);
     return foi_inserido;
 }
 
