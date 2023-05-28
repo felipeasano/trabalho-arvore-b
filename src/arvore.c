@@ -97,15 +97,19 @@ void imprime_por_niveis(ARQ_BIN* arq_index){
     NO r, *aux;
     printf("raiz->%d", arq_index->cab.raiz);
     ler_bloco(arq_index, arq_index->cab.raiz, &r);
-                puts("aq");
+    puts("aq");
     enqueue(fila, &r);
     while(!fila_vazia(fila)){
         int n = fila_tam(fila);
         while(n > 0){
             aux = dequeue(fila);
             imprime_noB(aux);
+            //printf("chave: %d\n", aux->chaves[0]);
+            //printf("filho: %d\n", aux->filhos[0]);
+
             for(i = 0; i < aux->numChaves+1 && !eh_folha(aux); i++){
                 ler_bloco(arq_index, aux->filhos[i], &r);
+                printf("root: %d\n", r.filhos[0]);
                 enqueue(fila, &r);
             }
             n--;
@@ -140,14 +144,23 @@ int retorna_livre(ARQ_BIN* arq_index){
     }
 }
 
+NO cria_no_arvore(){
+    NO no;
+    no.numChaves = 0;
+    for(int i = 0; i < ORDEM; i++){
+        no.filhos[i] = -1;
+    }
+    return no;
+}
+
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos 1 nó
 //                gravado e o cabeçalho
 //pós-requisitos: A partir do no gravado na posição "posX" faz o split do nó e salva esse novo nó
 //                na posição "posY". Retorna "posY", além do elemento do meio do nó onde ocorreu o split
 int split(ARQ_BIN* arq_index, int posX, int *m, int *m_ptDado) {
     int posY = retorna_livre(arq_index);
-    NO y;
-    NO x;
+    NO y = cria_no_arvore(&y);
+    NO x = cria_no_arvore(&x);
     ler_bloco(arq_index, posX, &x);
     int q = x.numChaves/2;
     y.numChaves = x.numChaves - q - 1;
@@ -207,7 +220,7 @@ int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado){
             if(eh_overflow(&filho_pos)){
                 int m, m_ptdado;
                 int pos_aux = split(arq_index, r.filhos[pos], &m, &m_ptdado);
-                //printf("pos_aux = %d\n", pos_aux);
+                printf("pos_aux = %d\n", pos_aux);
                 adiciona_direita(&r, pos, m, m_ptdado, pos_aux);
             }
         }
@@ -237,6 +250,7 @@ int insere(ARQ_BIN* arq_index, int chave, int ptdado){
         if(eh_overflow(&raiz)){
             int m, m_ptdado, pos_livre;
             int posx = split(arq_index, arq_index->cab.raiz, &m, &m_ptdado);
+            printf("split raiz = %d\n", posx);
             NO nova_raiz;
             nova_raiz.chaves[0] = m;
             nova_raiz.registro[0] = m_ptdado;

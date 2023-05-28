@@ -18,13 +18,46 @@ int main(){
     char path[40];
     PRODUTO p;
     NO no;
-    ler_bloco(&arq_indices, 0, &no);
+    ler_bloco(&arq_indices, arq_indices.cab.raiz, &no);
 
     printf("chaves: ");
     for(int i = 0; i < ORDEM; i++){
         printf("%d |", no.chaves[i]);
     }
-    printf("\nNumChaves: %d\n", no.numChaves);
+    printf("\n");
+    printf("filhos: ");
+    for(int i = 0; i < ORDEM; i++){
+        printf("%d |", no.filhos[i]);
+    }
+    printf("\nNumChaves: %d\n\n", no.numChaves);
+
+    NO filho0;
+    ler_bloco(&arq_indices, no.filhos[0], &filho0);
+    printf("\nfilho 0:\n");
+    printf("chaves: ");
+    for(int i = 0; i < ORDEM; i++){
+        printf("%d |", filho0.chaves[i]);
+    }
+    printf("\n");
+    printf("filhos: ");
+    for(int i = 0; i < ORDEM; i++){
+        printf("%d |", filho0.filhos[i]);
+    }
+    printf("\nNumChaves: %d\n", filho0.numChaves);
+
+    NO filho1;
+    ler_bloco(&arq_indices, no.filhos[1], &filho1);
+    printf("\nfilho 1:\n");
+    printf("chaves: ");
+    for(int i = 0; i < ORDEM; i++){
+        printf("%d |", filho1.chaves[i]);
+    }
+    printf("\n");
+    printf("filhos: ");
+    for(int i = 0; i < ORDEM; i++){
+        printf("%d |", filho1.filhos[i]);
+    }
+    printf("\nNumChaves: %d\n", filho1.numChaves);
 
     while(1){
         //system("cls");
