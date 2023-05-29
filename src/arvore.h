@@ -24,7 +24,7 @@ typedef struct produto{
 }PRODUTO;
 
 typedef struct no_fila{
-    NO* noB;
+    int pos;
     struct no_fila* prox;
 }NO_FILA;
 

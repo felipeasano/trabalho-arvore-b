@@ -49,9 +49,9 @@ int fila_tam(FILA *f){
     return i;
 }
 
-void enqueue(FILA *f, NO* noB){
+void enqueue(FILA *f, int pos){
     NO_FILA* aux = (NO_FILA*)malloc(sizeof(NO_FILA));
-    aux->noB = noB;
+    aux->pos = pos;
     aux->prox = NULL;
     if(fila_vazia(f)){
         f->inicio = aux;
@@ -61,19 +61,15 @@ void enqueue(FILA *f, NO* noB){
     f->fim = aux;
 }
 
-NO* dequeue(FILA* f){
-    if(!fila_vazia(f)){
-        NO* x;
-        NO_FILA* aux = f->inicio;
-        x = f->inicio->noB;
-        if(f->inicio == f->fim){
-            f->fim = NULL;
-        }
-        f->inicio = f->inicio->prox;
-        free(aux);
-        return x;
+int dequeue(FILA* f){
+    NO_FILA* aux = f->inicio;
+    int pos = f->inicio->pos;
+    if(f->inicio == f->fim){
+        f->fim = NULL;
     }
-    return NULL;
+    f->inicio = f->inicio->prox;
+    free(aux);
+    return pos;
 }
 
 void imprime_noB(NO* no){
@@ -86,36 +82,30 @@ void imprime_noB(NO* no){
 }
 
 void imprime_por_niveis(ARQ_BIN* arq_index){
-
-    if(arq_index->cab.raiz == -1){
-        printf("Arvore Vazia!\n");
+    FILA* fila = cria_fila();
+    if (arq_index->cab.raiz == -1) {
         return;
     }
-
-    int i;
-    FILA* fila = cria_fila();
-    NO r, *aux;
-    printf("raiz->%d", arq_index->cab.raiz);
-    ler_bloco(arq_index, arq_index->cab.raiz, &r);
-    puts("aq");
-    enqueue(fila, &r);
-    while(!fila_vazia(fila)){
-        int n = fila_tam(fila);
-        while(n > 0){
-            aux = dequeue(fila);
-            imprime_noB(aux);
-            //printf("chave: %d\n", aux->chaves[0]);
-            //printf("filho: %d\n", aux->filhos[0]);
-
-            for(i = 0; i < aux->numChaves+1 && !eh_folha(aux); i++){
-                ler_bloco(arq_index, aux->filhos[i], &r);
-                printf("root: %d\n", r.filhos[0]);
-                enqueue(fila, &r);
+    enqueue(fila, arq_index->cab.raiz);
+    enqueue(fila, -1);
+    while (!fila_vazia(fila)) {
+        int pos = dequeue(fila);
+        if (pos == -1) {
+            printf("\n");
+            if (!fila_vazia(fila)) {
+                enqueue(fila, -1);
             }
-            n--;
-            free(aux);
+            continue;
         }
-        printf("\n");
+        NO no;
+        ler_bloco(arq_index, pos, &no);
+        imprime_noB(&no);
+        if (!eh_folha(&no)) {
+            int n = no.numChaves;
+            for (int i=0; i<n+1; ++i) {
+                enqueue(fila, no.filhos[i]);
+            }
+        }
     }
     free(fila);
 }
