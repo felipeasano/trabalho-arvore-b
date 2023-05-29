@@ -266,4 +266,23 @@ int insere(ARQ_BIN* arq_index, int chave, int ptdado){
     return foi_inserido;
 }
 
+int busca(ARQ_BIN* arq_index, int pos_arq, int cod, int *pos){
+    if(pos_arq == -1){
+        return 1;
+    }
+    NO no;
+    ler_bloco(arq_index, pos_arq, &no);
+
+    int i = 0;
+    while(i < no.numChaves && no.chaves[i] < cod){
+        i++;
+    }
+    if((i+1) > no.numChaves || no.chaves[i] > cod){
+        int filhoI = no.filhos[i];
+        return busca(arq_index, filhoI, cod, pos);
+    }
+    *pos = i;
+    return pos_arq;
+}
+
 #endif

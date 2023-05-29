@@ -64,4 +64,6 @@ int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado);
 
 int insere(ARQ_BIN* arq_index, int chave, int ptdado);
 
+int busca(ARQ_BIN* arq_index, int pos_arq, int cod, int *pos);
+
 #endif

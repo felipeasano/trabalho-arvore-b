@@ -6,6 +6,8 @@ void imprime_cab(ARQ_BIN* b){
     printf("livre: %d\n", b->cab.livre);
 }
 
+
+
 int main(){
     
     ARQ_BIN arq_indices;
@@ -17,54 +19,13 @@ int main(){
     int opcao;
     char path[40];
     PRODUTO p;
-    NO no;
-    ler_bloco(&arq_indices, arq_indices.cab.raiz, &no);
-
-    printf("chaves: ");
-    for(int i = 0; i < ORDEM; i++){
-        printf("%d |", no.chaves[i]);
-    }
-    printf("\n");
-    printf("filhos: ");
-    for(int i = 0; i < ORDEM; i++){
-        printf("%d |", no.filhos[i]);
-    }
-    printf("\nNumChaves: %d\n\n", no.numChaves);
-
-    NO filho0;
-    ler_bloco(&arq_indices, no.filhos[0], &filho0);
-    printf("\nfilho 0:\n");
-    printf("chaves: ");
-    for(int i = 0; i < ORDEM; i++){
-        printf("%d |", filho0.chaves[i]);
-    }
-    printf("\n");
-    printf("filhos: ");
-    for(int i = 0; i < ORDEM; i++){
-        printf("%d |", filho0.filhos[i]);
-    }
-    printf("\nNumChaves: %d\n", filho0.numChaves);
-
-    NO filho1;
-    ler_bloco(&arq_indices, no.filhos[1], &filho1);
-    printf("\nfilho 1:\n");
-    printf("chaves: ");
-    for(int i = 0; i < ORDEM; i++){
-        printf("%d |", filho1.chaves[i]);
-    }
-    printf("\n");
-    printf("filhos: ");
-    for(int i = 0; i < ORDEM; i++){
-        printf("%d |", filho1.filhos[i]);
-    }
-    printf("\nNumChaves: %d\n", filho1.numChaves);
-
+    
     while(1){
-        //system("cls");
+        system("cls");
         imprime_menu();
         scanf("%d", &opcao);
 
-        imprime_cab(&arq_indices);
+        //imprime_cab(&arq_indices);
         switch (opcao) {
             case 0:
                 fecha_arq_bin(&arq_indices);
@@ -89,6 +50,7 @@ int main(){
                 break;
             case 5:
                 //imprimirInformacoesProduto();
+                busca_produto(&arq_indices, &arq_dados);
                 break;
             case 6:
                 //imprimirListaProdutos();

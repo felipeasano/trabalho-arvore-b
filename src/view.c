@@ -69,6 +69,23 @@ void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
     grava_cabecalho(arq_dados);
 }
 
+void busca_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
+    int pos, codigo;
+
+    printf("Entre com o codigo do produto: ");
+    scanf("%d%*c", &codigo);
+    int posicao_arvore = busca(arq_index, arq_index->cab.raiz, codigo, &pos);
+    if(posicao_arvore == -1){
+        printf("Codigo nao cadastrado!\n");
+        return;
+    }
+    NO no;
+    ler_bloco(arq_index, posicao_arvore, &no);
+    PRODUTO p;
+    ler_bloco(arq_dados, no.registro[pos], &p);
+    imprime_produto(&p);
+}
+
 //Realiza inclusoes em lote
 //Pre-condicao: Arquivo txt com comandos e informacoes aberto
 //Pos-condicao: Inclusoes, alteracoes e remocoes do arquivo efetuadas
