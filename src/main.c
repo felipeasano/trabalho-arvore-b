@@ -6,8 +6,6 @@ void imprime_cab(ARQ_BIN* b){
     printf("livre: %d\n", b->cab.livre);
 }
 
-
-
 int main(){
     
     ARQ_BIN arq_indices;
@@ -44,9 +42,11 @@ int main(){
                 break;
             case 3:
                 //atualizarPreco();
+                atualizar_produto(&arq_indices, &arq_dados, 0);
                 break;
             case 4:
                 //atualizarEstoque();
+                atualizar_produto(&arq_indices, &arq_dados, 1);
                 break;
             case 5:
                 //imprimirInformacoesProduto();
@@ -54,6 +54,7 @@ int main(){
                 break;
             case 6:
                 //imprimirListaProdutos();
+                listar_produtos(&arq_indices, &arq_dados);
                 break;
             case 7:
                 //imprimirArvore();
@@ -74,5 +75,4 @@ int main(){
         }
         system("pause");
     }
-
 }

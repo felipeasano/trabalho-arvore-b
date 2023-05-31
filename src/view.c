@@ -70,6 +70,12 @@ void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
 }
 
 void busca_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
+
+    if(arq_index->cab.raiz == -1){
+        printf("Nenhum produto cadastrado ainda...\n");
+        return;
+    }
+
     int pos, codigo;
 
     printf("Entre com o codigo do produto: ");
@@ -152,6 +158,78 @@ void loadPath(ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
     incluiLote(fr, arq_indices, arq_dados);
     printf("\n");
     fclose(fr);
+}
+
+PRODUTO atualiza_preco(PRODUTO p){
+    printf("Entre com o novo preco: ");
+    scanf("%*c%s", p.preco);
+    //fgets(p.preco, 10, stdin);
+    //p.preco[strcspn(p.preco,"\n")] = '\0';
+    return p;
+}
+
+PRODUTO atualiza_estoque(PRODUTO p){
+    printf("Entre com o novo estoque: ");
+    scanf("%d%*c", &p.estoque);
+    return p;
+}
+
+void atualizar_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int op){
+    int cod;
+    printf("Entre com o codigo: ");
+    scanf("%d", &cod);
+    int pos_dados;
+    int pos_arvore = busca(arq_index, arq_index->cab.raiz, cod, &pos_dados);
+    if(pos_arvore == -1){
+        printf("Codigo [%d] nao encontrado!\n", cod);
+        return;
+    }
+    NO r;
+    ler_bloco(arq_index, pos_arvore, &r);
+    PRODUTO p;
+    ler_bloco(arq_dados, r.registro[pos_dados], &p);
+
+    imprime_produto(&p);
+
+    if(op == 0){
+        p = atualiza_preco(p);
+    }else{
+        p = atualiza_estoque(p);
+    }
+
+    grava_bloco(arq_dados, &p, r.registro[pos_dados]);
+    printf("Produto [%d] atualizado com sucesso!\n", cod);
+}
+
+//pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
+//                cabeçalho de indices gravado, a posição que um nó de árvore b se encontra e
+//                um ponteiro para um arquivo aberto de indices
+//pós-requisitos: Imprime na tela os dados do arquivo de dados em ordem crescente de código
+void in_ordem(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int pos){
+    if(pos == -1 ) {
+        //printf("Sem produtos cadastrados ainda...\n");
+        return;
+    }
+    int i;
+    PRODUTO p;
+    NO r;
+    ler_bloco(arq_index, pos, &r);
+    for(i = 0; i < r.numChaves; i++){
+        in_ordem(arq_index, arq_dados, r.filhos[i]);
+        //printf("[%d - %d]", r->chave[i], r->ptDados[i]);
+        ler_bloco(arq_dados, r.registro[i], &p);
+        imprime_produto(&p);
+        printf("\n");
+    }
+    in_ordem(arq_index, arq_dados, r.filhos[i]);
+}
+
+void listar_produtos(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
+    if(arq_index->cab.raiz == -1){
+        printf("Nenhum produto cadastrado ainda...\n");
+        return;
+    }
+    in_ordem(arq_index, arq_dados, arq_index->cab.raiz);
 }
 
 #endif

@@ -82,6 +82,12 @@ void imprime_noB(NO* no){
 }
 
 void imprime_por_niveis(ARQ_BIN* arq_index){
+
+    if(arq_index->cab.raiz == -1){
+        printf("Nenhum produto cadastrado ainda...\n");
+        return;
+    }
+
     FILA* fila = cria_fila();
     if (arq_index->cab.raiz == -1) {
         return;
