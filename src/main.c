@@ -62,9 +62,11 @@ int main(){
                 break;
             case 8:
                 //imprimirListaLivresIndices();
+                imprime_livre_index(&arq_indices);
                 break;
             case 9:
                 //imprimirListaLivresDados();
+                imprime_livre_dados(&arq_dados);
                 break;
             case 10:
                 loadPath(&arq_indices, &arq_dados);

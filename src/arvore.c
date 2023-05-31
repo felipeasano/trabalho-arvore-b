@@ -73,12 +73,12 @@ int dequeue(FILA* f){
 }
 
 void imprime_noB(NO* no){
-    printf("- [ ");
+    printf("-[");
     for(int i = 0; i < no->numChaves; i++){
         printf("%d", no->chaves[i]);
-        if(i+1 < no->numChaves) printf(" | ");
+        if(i+1 < no->numChaves) printf("|");
     }
-    printf(" ] - ");
+    printf("]-");
 }
 
 void imprime_por_niveis(ARQ_BIN* arq_index){
@@ -216,7 +216,7 @@ int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado){
             if(eh_overflow(&filho_pos)){
                 int m, m_ptdado;
                 int pos_aux = split(arq_index, r.filhos[pos], &m, &m_ptdado);
-                printf("pos_aux = %d\n", pos_aux);
+                //printf("pos_aux = %d\n", pos_aux);
                 adiciona_direita(&r, pos, m, m_ptdado, pos_aux);
             }
         }
@@ -246,7 +246,7 @@ int insere(ARQ_BIN* arq_index, int chave, int ptdado){
         if(eh_overflow(&raiz)){
             int m, m_ptdado, pos_livre;
             int posx = split(arq_index, arq_index->cab.raiz, &m, &m_ptdado);
-            printf("split raiz = %d\n", posx);
+            //printf("split raiz = %d\n", posx);
             NO nova_raiz;
             nova_raiz.chaves[0] = m;
             nova_raiz.registro[0] = m_ptdado;

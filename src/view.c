@@ -131,9 +131,11 @@ void incluiLote(FILE *fr, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados) {
             sscanf(ptr, "%[^\n]", aux2);
             if (strcmp(aux1, "")) {
                 //atualizaEstoque(p->id, atoi(aux1));
+                atualizar_produto_lote(arq_indices, arq_dados, p.cod, atoi(aux1), aux2, 1);
             }
             if (strcmp(aux2, "")) {
                 //atualizaPreco(p->id, atof(aux2));
+                atualizar_produto_lote(arq_indices, arq_dados, p.cod, atoi(aux1), aux2, 0);
             }
         }
         else {
@@ -201,6 +203,45 @@ void atualizar_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int op){
     printf("Produto [%d] atualizado com sucesso!\n", cod);
 }
 
+PRODUTO atualiza_preco_lote(PRODUTO p, char* str){
+    //printf("Entre com o novo preco: ");
+    //scanf("%*c%s", p.preco);
+    //fgets(p.preco, 10, stdin);
+    //p.preco[strcspn(p.preco,"\n")] = '\0';
+    strcpy(p.preco, str);
+    return p;
+}
+
+PRODUTO atualiza_estoque_lote(PRODUTO p, int estoque){
+    //printf("Entre com o novo estoque: ");
+    //scanf("%d%*c", &p.estoque);
+    p.estoque = estoque;
+    return p;
+}
+
+void atualizar_produto_lote(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int cod, int aux1, char* aux2, int op){
+    int pos_dados;
+    int pos_arvore = busca(arq_index, arq_index->cab.raiz, cod, &pos_dados);
+    if(pos_arvore == -1){
+        //printf("Codigo [%d] nao encontrado!\n", cod);
+        return;
+    }
+    NO r;
+    ler_bloco(arq_index, pos_arvore, &r);
+    PRODUTO p;
+    ler_bloco(arq_dados, r.registro[pos_dados], &p);
+
+    //imprime_produto(&p);
+
+    if(op == 0){
+        p = atualiza_preco_lote(p, aux2);
+    }else{
+        p = atualiza_estoque_lote(p, aux1);
+    }
+
+    grava_bloco(arq_dados, &p, r.registro[pos_dados]);
+}
+
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
 //                cabeçalho de indices gravado, a posição que um nó de árvore b se encontra e
 //                um ponteiro para um arquivo aberto de indices
@@ -230,6 +271,38 @@ void listar_produtos(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
         return;
     }
     in_ordem(arq_index, arq_dados, arq_index->cab.raiz);
+}
+
+void imprime_livre_index(ARQ_BIN* arq){
+    if(arq->cab.livre == -1){
+        printf("Lista de livres vazia!\n");
+        return;
+    }
+
+    NO no;
+    int livre = arq->cab.livre;
+    while(livre != -1){
+        printf("%d -> ", livre);
+        ler_bloco(arq, livre, &no);
+        livre = no.filhos[0];
+    }
+    printf("\n");
+}
+
+void imprime_livre_dados(ARQ_BIN* arq){
+    if(arq->cab.livre == -1){
+        printf("Lista de livres vazia!\n");
+        return;
+    }
+
+    PRODUTO p;
+    int livre = arq->cab.livre;
+    while(livre != -1){
+        printf("%d -> ", livre);
+        ler_bloco(arq, livre, &p);
+        livre = p.cod;
+    }
+    printf("\n");
 }
 
 #endif
