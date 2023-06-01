@@ -3,7 +3,7 @@
 
 #include "arvore.h"
 
-// Veritica se o nó fornecido é folha
+// Verifica se o nó fornecido é folha
 // Pré-condição: Ponteiro para manipulador de indices válido
 // Pós-condição: Nenhuma
 int eh_folha(NO* no){
@@ -116,14 +116,14 @@ void imprime_por_niveis(ARQ_BIN* arq_index){
     free(fila);
 }
 
-NO* cria_no(){
+/*NO* cria_no(){
     NO* no = (NO*)malloc(sizeof(NO));
     no->numChaves = 0;
     for(int i = 0; i < ORDEM; i++){
         no->filhos[i] = -1;
     }
     return no;
-}
+}*/
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
 //                cabeçalho de indices gravado
@@ -274,8 +274,9 @@ int insere(ARQ_BIN* arq_index, int chave, int ptdado){
 
 int busca(ARQ_BIN* arq_index, int pos_arq, int cod, int *pos){
     if(pos_arq == -1){
-        return 1;
+        return -1;
     }
+
     NO no;
     ler_bloco(arq_index, pos_arq, &no);
 

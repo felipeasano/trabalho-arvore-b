@@ -11,11 +11,10 @@ int main(){
     ARQ_BIN arq_indices;
     ARQ_BIN arq_dados;
 
-    abre_arq_bin("indices.bin", &arq_indices, sizeof(NO));
-    abre_arq_bin("dados.bin", &arq_dados, sizeof(PRODUTO));
+    abre_arq_bin("../indices.bin", &arq_indices, sizeof(NO));
+    abre_arq_bin("../dados.bin", &arq_dados, sizeof(PRODUTO));
 
     int opcao;
-    char path[40];
     PRODUTO p;
     
     while(1){
@@ -39,6 +38,7 @@ int main(){
                 break;
             case 2:
                 //removerProduto();
+                printf("Nao implementado ainda!\n");
                 break;
             case 3:
                 //atualizarPreco();
