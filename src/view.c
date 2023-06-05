@@ -55,7 +55,7 @@ void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
 
     int pos_inserir = aloca_bloco(arq_dados);
     if(insere(arq_indices, p->cod, pos_inserir)){
-        grava_bloco(arq_dados, p, arq_dados->cab.topo);
+        grava_bloco(arq_dados, p, pos_inserir);
         if(pos_inserir == arq_dados->cab.topo){
             arq_dados->cab.topo++;
         }
