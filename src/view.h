@@ -31,4 +31,6 @@ void imprime_livre_index(ARQ_BIN* arq);
 
 void imprime_livre_dados(ARQ_BIN* arq);
 
+//void GerenciaRemocao(ARQ_BIN *arq_index, ARQ_BIN *arq_dados, int codigo);
+
 #endif

@@ -15,6 +15,7 @@ int main(){
     abre_arq_bin("dados.bin", &arq_dados, sizeof(PRODUTO));
 
     int opcao;
+    int info;
     char path[40];
     PRODUTO p;
     
@@ -39,6 +40,9 @@ int main(){
                 break;
             case 2:
                 //removerProduto();
+                printf("Entre com o Codigo do produto a ser removido: ");
+                scanf("%d*%c", &info);
+                //GerenciaRemocao(&arq_indices, &arq_dados, info);
                 break;
             case 3:
                 //atualizarPreco();

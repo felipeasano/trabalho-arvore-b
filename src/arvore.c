@@ -291,4 +291,262 @@ int busca(ARQ_BIN* arq_index, int pos_arq, int cod, int *pos){
     return pos_arq;
 }
 
+//pré-requisitos: Ponteiro não nulo para nó da árvoreB
+//pós-requisitos: Faz o "shift-left" a partir da posição indicada e retorna o filho que não faz mais parte
+/*int retiraEsquerda(NO *r, int pos){
+    int i;
+    int aux;
+    aux = r->filhos[pos];
+    for(i = pos; i < r->numChaves-1; i++){
+        r->chaves[i] = r->chaves[i+1];
+        r->registro[i] = r->registro[i+1];
+        r->filhos[i] = r->filhos[i+1];
+    }
+    r->filhos[i] = r->filhos[i+1];
+    r->numChaves--;
+    return aux;
+}
+
+//pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
+//                cabeçalho de indices gravado e uma posição valida para esse arquvo
+//pós-requisitos: Retornar o valor mais a direita da arvoreB a partir da posição, e a posição para o arquivo
+//                de dados correspontende
+int sucessor(ARQ_BIN *arq_index, int posArquivo, int *ptDados){
+    NO r;
+    ler_bloco(arq_index, posArquivo, &r);
+    int Vsucessor;
+    if(eh_folha(&r)){
+        Vsucessor =  r.chaves[r.numChaves-1];
+        *ptDados = r.registro[r.numChaves-1];
+    } else{
+        Vsucessor = sucessor(arq_index, r.filhos[r.numChaves], ptDados);
+    }
+    return Vsucessor;
+}
+
+//pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
+//                cabeçalho de indices gravado e uma posição valida para esse arquvo
+//pós-requisitos: Retorna 1 se o nó está com underflow, 0 caso não esteja
+int underflow(ARQ_BIN* arq_index, int posArquivo){
+    int isUndeflow;
+    NO r;
+    ler_bloco(arq_index, posArquivo, &r);
+    isUndeflow = (r.numChaves < ORDEM / 2);
+    return isUndeflow;
+}
+
+//pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
+//                cabeçalho de indices gravado e uma posição valida para esse arquvo
+//pós-requisitos: Retorna 1 se o nó pode emprestar, 0 caso não possa
+int podeEmprestar(ARQ_BIN* arq_index, int posArquivo){
+    NO r;
+    ler_bloco(arq_index, posArquivo, &r);
+    int pode = r.numChaves > ((ORDEM/2));
+    return pode;
+}
+
+//pré-requisitos: Ponteiro não nulo para nó da árvoreB
+//pós-requisitos: Adiciona os dados do parametro nas posição 0 da arvoreB, e empura os outros uma posição
+void adicionaEsquerda(NO *r, int chave, int ptDados, int nova){
+    int i = 0;
+    for(i = r->numChaves; i > 0; i--){
+        r->chaves[i] = r->chaves[i-1];
+        r->registro[i] = r->registro[i-1];
+        r->filhos[i+1] = r->filhos[i];
+    }
+    r->filhos[1] = r->filhos[0];
+    r->chaves[0] = chave;
+    r->registro[0] = ptDados;
+    r->filhos[0] = nova;
+    r->numChaves++;
+}
+
+//pré-requisitos: Ponteiros não nulos para nós da árvoreB
+//pós-requisitos: Passo o valor da chave do nó sem_overflow para o pai, e do pai para o nó com underflow
+void emprestaEsquerda(NO *raiz, int posUnderflow, NO *com_undeflow, NO *sem_underflow){
+    int chavePai, ptDadoPai, chaveSemUnder, ptDadoSemUnder, aux;
+    chavePai = raiz->chaves[posUnderflow-1];
+    ptDadoPai = raiz->registro[posUnderflow-1];
+    chaveSemUnder = sem_underflow->chaves[sem_underflow->numChaves - 1];
+    ptDadoSemUnder = sem_underflow->registro[sem_underflow->numChaves - 1];
+
+    aux = sem_underflow->filhos[sem_underflow->numChaves];
+
+    adicionaEsquerda(com_undeflow, chavePai, ptDadoPai, aux);
+    raiz->chaves[posUnderflow-1] = chaveSemUnder;
+    raiz->registro[posUnderflow-1] = ptDadoSemUnder;
+
+    sem_underflow->numChaves--;
+}
+
+//pré-requisitos: Ponteiros não nulos para nós da árvoreB
+//pós-requisitos: Passo o valor da chave do nó sem_overflow para o pai, e do pai para o nó com underflow
+void emprestaDireita(NO *raiz, int posUnderflow, NO *com_undeflow, NO *sem_underflow){
+    int chavePai, ptDadoPai, chaveSemUnder, ptDadoSemUnder, aux;
+    chavePai = raiz->chaves[posUnderflow];
+    ptDadoPai = raiz->registro[posUnderflow];
+    chaveSemUnder = sem_underflow->chaves[0];
+    ptDadoSemUnder = sem_underflow->registro[0];
+    aux = retiraEsquerda(sem_underflow, 0);
+
+    com_undeflow->chaves[com_undeflow->numChaves] = chavePai;
+    com_undeflow->registro[com_undeflow->numChaves] = ptDadoPai;
+    com_undeflow->filhos[com_undeflow->numChaves+1] = aux;
+    com_undeflow->numChaves++;
+    raiz->chaves[posUnderflow] = chaveSemUnder;
+    raiz->registro[posUnderflow] = ptDadoSemUnder;
+}
+
+//pré-requisitos: Ponteiro não nulo para nó da árvoreB, e arquivo aberto
+//pós-requisitos: Retorna 1 se foi possivel emprestar, e 0 se não
+int empresta(ARQ_BIN* arq_index, NO *r, int posUnderflow){
+    //verifica se não é o mais a direita
+    if(posUnderflow - 1 >= 0 && podeEmprestar(arq_index, r->filhos[posUnderflow-1])){
+        NO com_undeflow;
+        ler_bloco(arq_index, r->filhos[posUnderflow-1], &com_undeflow);
+
+        NO sem_underflow;
+        ler_bloco(arq_index, r->filhos[posUnderflow-1], &sem_underflow);
+
+        emprestaEsquerda(r, posUnderflow, &com_undeflow, &sem_underflow);
+
+        grava_bloco(arq_index, &com_undeflow, r->filhos[posUnderflow]);
+        grava_bloco(arq_index, &sem_underflow, r->filhos[posUnderflow-1]);
+
+        return 1;
+    }
+    //verifica se não é o mais a direita
+    if(posUnderflow + 1 <= r->numChaves && podeEmprestar(arq_index, r->filhos[posUnderflow+1])){
+        NO com_undeflow;
+        ler_bloco(arq_index, r->filhos[posUnderflow], &com_undeflow);
+
+        NO sem_underflow;
+        ler_bloco(arq_index, r->filhos[posUnderflow+1], &sem_underflow);
+        //Carregar os valore que vão sofre o empresta
+        emprestaDireita(r, posUnderflow, &com_undeflow, &sem_underflow);
+        grava_bloco(arq_index, &com_undeflow, r->filhos[posUnderflow]);
+
+        grava_bloco(arq_index, &sem_underflow, r->filhos[posUnderflow+1]);
+        return 1;
+    }
+    return 0;
+}
+
+//pré-requisitos: Ponteiros não nulos para nós da árvoreB
+//pós-requisitos: Faz a operação de merge, onde o ponteiro da esquerda sempre recebe os dados da direita
+void mergeAux(NO *raiz, int posUnderflow, NO *aDireita, NO *aEsquerda, int isEsq){
+    int chavePai, ptDadosPai, i, j, aux;
+
+    chavePai = raiz->chaves[posUnderflow - isEsq];
+    ptDadosPai = raiz->registro[posUnderflow - isEsq];
+    aEsquerda->chaves[aEsquerda->numChaves] = chavePai;
+    aEsquerda->registro[aEsquerda->numChaves] = ptDadosPai;
+    aEsquerda->numChaves++;
+    j = aEsquerda->numChaves;
+    for(i = 0; i < aDireita->numChaves; i++){
+        aEsquerda->chaves[j] = aDireita->chaves[i];
+        aEsquerda->registro[j] = aDireita->registro[i];
+        aEsquerda->filhos[j] = aDireita->filhos[i];
+        aEsquerda->numChaves++;
+        j++;
+    }
+    aEsquerda->filhos[j] = aDireita->filhos[i];
+    aux = retiraEsquerda(raiz, posUnderflow-isEsq);
+   // free(aDireita);
+    //inserirLivre
+    raiz->filhos[posUnderflow-isEsq] = aux;
+}
+
+//pré-requisitos: Ponteiro não nulo para nó da árvoreB, e arquivo aberto
+//pós-requisitos: A posição com underfow deixa de estar com underflow
+void merge(ARQ_BIN* arq_index, NO *r, int posUnderflow){
+    if(posUnderflow - 1 >= 0){
+        int posExcluido = r->filhos[posUnderflow];
+        int posContinua = r->filhos[posUnderflow - 1];
+        NO aDireita;
+        ler_bloco(arq_index, r->filhos[posUnderflow], &aDireita);
+        NO aEsquerda;
+        ler_bloco(arq_index, r->filhos[posUnderflow-1], &aEsquerda);
+        mergeAux(r, posUnderflow, &aDireita, &aEsquerda, 1);
+        grava_bloco(arq_index, &aEsquerda, posContinua);
+        aDireita.filhos[0] = arq_index->cab.livre;
+        aDireita.filhos[1] = 1245;
+        arq_index->cab.livre = posExcluido;
+        grava_bloco(arq_index, &aDireita, posExcluido);
+       // printf("Adicionando Livre = %d\n", posExcluido);
+        return;
+    }
+    //verifica se não é o mais a direita
+    if(posUnderflow + 1 <= r->numChaves ){
+        int posExcluido = r->filhos[posUnderflow + 1];
+        int posContinua = r->filhos[posUnderflow];
+        NO aDireita;
+        ler_bloco(arq_index, r->filhos[posUnderflow+1], &aDireita);
+        NO aEsquerda;
+        ler_bloco(arq_index, r->filhos[posUnderflow], &aEsquerda);
+        mergeAux(r, posUnderflow, &aDireita, &aEsquerda, 0);
+        grava_bloco(arq_index, &aEsquerda, posContinua);
+        aDireita.filhos[0] = arq_index->cab.livre;
+        arq_index->cab.livre = posExcluido;
+        grava_bloco(arq_index, &aDireita, posExcluido);
+       // printf("Adicionando Livre = %d\n", posExcluido);
+        return;
+    }
+}
+
+//pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
+//                cabeçalho de indices gravado e uma posição valida para esse arquvo
+//pós-requisitos: Info será removido da arvoreB
+void removeAux(ARQ_BIN* arq_index, int posArquvio, int info){
+    if(posArquvio == -1){
+        printf("Elemento não encontrado");
+        return;
+    }
+    NO r;
+    ler_bloco(arq_index, posArquvio, &r);
+    int pos;
+    if(buscaPos(&r,info, &pos)){ // O elemento está no nó
+        if(eh_folha(&r)){
+            retiraEsquerda(&r, pos);
+            r.filhos[0] = -1;
+            grava_bloco(arq_index, &r, posArquvio);
+            return;
+        } else{
+            int ptDados;
+            r.chaves[pos] = sucessor(arq_index, r.filhos[pos], &ptDados);
+            r.registro[pos] = ptDados;
+            info = r.chaves[pos];
+        }
+    }
+    removeAux(arq_index, r.filhos[pos], info);
+    if(underflow(arq_index, r.filhos[pos])){
+        if(!empresta(arq_index, &r, pos)){
+            merge(arq_index, &r, pos);
+        }
+    }
+}
+
+//pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
+//                cabeçalho de indices gravado
+//pós-requisitos: Info será removido da arvoreB
+void remover(ARQ_BIN* arq_index, int info){
+    if(arq_index->cab.raiz == -1){
+        printf("Arvore Vazia!\n");
+        return;
+    }
+    //verificar
+    removeAux(arq_index, arq_index->cab.raiz, info);
+    NO r;
+    ler_bloco(arq_index, arq_index->cab.raiz, &r);
+    if(r.numChaves == 0){
+        int aux = r.filhos[0];
+        r.filhos[0] = arq_index->cab.livre;
+       // printf("Inserindo Livre %d\n", cab->raiz);
+        grava_bloco(arq_index, &r, arq_index->cab.raiz);
+        arq_index->cab.livre = arq_index->cab.raiz;
+        arq_index->cab.raiz = aux;
+    }
+    grava_cabecalho(arq_index);
+}*/
+
 #endif

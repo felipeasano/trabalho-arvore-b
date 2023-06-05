@@ -305,4 +305,26 @@ void imprime_livre_dados(ARQ_BIN* arq){
     printf("\n");
 }
 
+//pré-requisitos: Os arquvios devem abertos
+//pós-requisitos: Remove de ambos os arquivos os dados correspondente ao "codigo"
+/*void GerenciaRemocao(ARQ_BIN *arq_index, ARQ_BIN *arq_dados, int codigo){
+    int pos, posArquivo;
+    
+    posArquivo = busca(arq_index, arq_index->cab.raiz, codigo, &pos);
+    if(posArquivo == -1){
+        printf("Codigo [%d] não encontrado\n", codigo);
+        return;
+    }
+    NO r;
+    ler_bloco(arq_index, posArquivo, &r);
+    remover(arq_index, codigo);
+    PRODUTO p;
+    ler_bloco(arq_dados, r.registro[pos], &p);
+    p.cod = arq_dados->cab.livre;
+    arq_dados->cab.livre = r.registro[pos];
+    grava_cabecalho(arq_dados);
+    grava_bloco(arq_dados, &p, r.registro[pos]);
+    printf("Codigo [%d] excluido com sucesso\n", codigo);
+}*/
+
 #endif
