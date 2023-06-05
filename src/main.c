@@ -11,12 +11,15 @@ int main(){
     ARQ_BIN arq_indices;
     ARQ_BIN arq_dados;
 
-    abre_arq_bin("indices.bin", &arq_indices, sizeof(NO));
-    abre_arq_bin("dados.bin", &arq_dados, sizeof(PRODUTO));
+    abre_arq_bin("../indices.bin", &arq_indices, sizeof(NO));
+    abre_arq_bin("../dados.bin", &arq_dados, sizeof(PRODUTO));
 
     int opcao;
+<<<<<<< HEAD
     int info;
     char path[40];
+=======
+>>>>>>> 34ff53f458f0e66e933eac19f0fdc14e2dc6414a
     PRODUTO p;
     
     while(1){
@@ -40,9 +43,13 @@ int main(){
                 break;
             case 2:
                 //removerProduto();
+<<<<<<< HEAD
                 printf("Entre com o Codigo do produto a ser removido: ");
                 scanf("%d*%c", &info);
                 //GerenciaRemocao(&arq_indices, &arq_dados, info);
+=======
+                printf("Nao implementado ainda!\n");
+>>>>>>> 34ff53f458f0e66e933eac19f0fdc14e2dc6414a
                 break;
             case 3:
                 //atualizarPreco();

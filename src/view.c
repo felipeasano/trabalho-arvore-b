@@ -35,13 +35,13 @@ PRODUTO cria_novo_produto(){
     printf("Codigo: ");
     scanf("%d%*c", &p.cod);
     printf("Nome: ");
-    fgets(p.nome, 50, stdin);
+    fgets(p.nome, 51, stdin);
     p.nome[strcspn(p.nome,"\n")] = '\0';
     printf("Marca: ");
-    fgets(p.marca, 30, stdin);
+    fgets(p.marca, 31, stdin);
     p.marca[strcspn(p.marca,"\n")] = '\0';
     printf("Categoria: ");
-    fgets(p.categoria, 50, stdin);
+    fgets(p.categoria, 51, stdin);
     p.categoria[strcspn(p.categoria,"\n")] = '\0';
     printf("Estoque: ");
     scanf("%d%*c", &p.estoque);
@@ -59,18 +59,17 @@ void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
         if(pos_inserir == arq_dados->cab.topo){
             arq_dados->cab.topo++;
         }
-        printf("Produto inserido com sucesso\n");
+        printf("Produto com ID [%d] inserido com sucesso\n", p->cod);
     }else{
         if(arq_dados->cab.livre != -1){
             arq_dados->cab.livre = pos_inserir;
         }
-        printf("Codigo [%d] ja cadastrado\n");
+        printf("Codigo [%d] ja cadastrado\n", p->cod);
     }
     grava_cabecalho(arq_dados);
 }
 
 void busca_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
-
     if(arq_index->cab.raiz == -1){
         printf("Nenhum produto cadastrado ainda...\n");
         return;
@@ -99,10 +98,9 @@ void incluiLote(FILE *fr, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados) {
     char text[300], *pt = NULL;
     PRODUTO p;
     while (fscanf(fr, "%[^\n]%*c", text) != EOF) {
-        //FILE *f = openBin();
         char *token = strtok(text, ";"); // pega o tipo
         if (strcmp(token, "I") == 0) {
-            printf("Insercao\n");
+            //printf("Insercao\n");
             p.cod = atoi(strtok(NULL, ";"));
             strcpy(p.nome, strtok(NULL, ";"));
             strcpy(p.marca, strtok(NULL, ";"));
@@ -120,7 +118,7 @@ void incluiLote(FILE *fr, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados) {
         }
 
         else if (strcmp(token, "A") == 0) {
-            printf("Alteracao\n");
+            //printf("Alteracao\n");
             int info;
             char aux1[16] = "", aux2[16] = "", *ptr = text;
             ptr += 2;
@@ -223,7 +221,7 @@ void atualizar_produto_lote(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int cod, int
     int pos_dados;
     int pos_arvore = busca(arq_index, arq_index->cab.raiz, cod, &pos_dados);
     if(pos_arvore == -1){
-        //printf("Codigo [%d] nao encontrado!\n", cod);
+        printf("Codigo [%d] nao encontrado!\n", cod);
         return;
     }
     NO r;
@@ -240,6 +238,7 @@ void atualizar_produto_lote(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int cod, int
     }
 
     grava_bloco(arq_dados, &p, r.registro[pos_dados]);
+    printf("Produto com ID [%d] alterado!\n", cod);
 }
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
