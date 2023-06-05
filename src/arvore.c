@@ -526,6 +526,7 @@ void removeAux(ARQ_BIN* arq_index, int posArquvio, int info){
     }
 }
 
+
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
 //                cabeçalho de indices gravado
 //pós-requisitos: Info será removido da arvoreB

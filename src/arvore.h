@@ -68,4 +68,5 @@ int busca(ARQ_BIN* arq_index, int pos_arq, int cod, int *pos);
 
 //void remover(ARQ_BIN* arq_index, int info);
 
+
 #endif

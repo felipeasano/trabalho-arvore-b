@@ -327,4 +327,5 @@ void imprime_livre_dados(ARQ_BIN* arq){
     printf("Codigo [%d] excluido com sucesso\n", codigo);
 }*/
 
+
 #endif
