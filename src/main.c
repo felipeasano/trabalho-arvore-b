@@ -20,7 +20,7 @@ int main(){
     PRODUTO p;
     
     while(1){
-        system("cls");
+        //system("cls");
         imprime_menu();
         scanf("%d", &opcao);
 

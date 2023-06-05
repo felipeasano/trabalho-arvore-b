@@ -48,6 +48,8 @@ int eh_overflow(NO* no);
 // Pós-condição: Nenhuma
 int eh_underflow(NO* no);
 
+void imprime_noB(NO* no);
+
 void imprime_por_niveis(ARQ_BIN* arq_index);
 
 NO* cria_no();

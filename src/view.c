@@ -79,7 +79,10 @@ void busca_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
 
     printf("Entre com o codigo do produto: ");
     scanf("%d%*c", &codigo);
+    //printf("codigo: %d\n", codigo);
     int posicao_arvore = busca(arq_index, arq_index->cab.raiz, codigo, &pos);
+    //printf("posicao arvore = %d\n", posicao_arvore);
+    //printf("pos = %d\n", pos);
     if(posicao_arvore == -1){
         printf("Codigo nao cadastrado!\n");
         return;
@@ -88,6 +91,7 @@ void busca_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
     ler_bloco(arq_index, posicao_arvore, &no);
     PRODUTO p;
     ler_bloco(arq_dados, no.registro[pos], &p);
+
     imprime_produto(&p);
 }
 
