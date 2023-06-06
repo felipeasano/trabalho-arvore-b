@@ -550,6 +550,7 @@ void removeAux(ARQ_BIN* arq_index, int posArquvio, int info){
             merge(arq_index, &r, pos);
         }
     }
+    grava_bloco(arq_index, &r, posArquvio);
 }
 
 
@@ -568,7 +569,6 @@ void remover(ARQ_BIN* arq_index, int info){
     if(r.numChaves == 0){
         int aux = r.filhos[0];
         r.filhos[0] = arq_index->cab.livre;
-       // printf("Inserindo Livre %d\n", cab->raiz);
         grava_bloco(arq_index, &r, arq_index->cab.raiz);
         arq_index->cab.livre = arq_index->cab.raiz;
         arq_index->cab.raiz = aux;
