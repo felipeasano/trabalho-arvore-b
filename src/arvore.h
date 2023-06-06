@@ -96,6 +96,9 @@ int insere(ARQ_BIN* arq_index, int chave, int ptdado);
 // Pós-condição: Retorna 1 se o código foi encontrado, caso contrário retorna 0 e atualiza a posição
 int busca(ARQ_BIN* arq_index, int pos_arq, int cod, int *pos);
 
+//pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
+//cabeçalho de indices gravado
+//pós-requisitos: Info será removido da arvoreB
 void remover(ARQ_BIN* arq_index, int info);
 
 

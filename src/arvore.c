@@ -132,7 +132,7 @@ void imprime_por_niveis(ARQ_BIN* arq_index){
 }
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
-//                cabeçalho de indices gravado
+//cabeçalho de indices gravado
 //pós-requisitos: Retorna a posição onde o novo dado dever ser inserido
 int retorna_livre(ARQ_BIN* arq_index){
 
@@ -158,9 +158,9 @@ NO cria_no_arvore(){
 }
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos 1 nó
-//                gravado e o cabeçalho
+//gravado e o cabeçalho
 //pós-requisitos: A partir do no gravado na posição "posX" faz o split do nó e salva esse novo nó
-//                na posição "posY". Retorna "posY", além do elemento do meio do nó onde ocorreu o split
+//na posição "posY". Retorna "posY", além do elemento do meio do nó onde ocorreu o split
 int split(ARQ_BIN* arq_index, int posX, int *m, int *m_ptDado) {
     int posY = retorna_livre(arq_index);
     NO y = cria_no_arvore(&y);
@@ -334,9 +334,9 @@ int retiraEsquerda(NO *r, int pos){
 }
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
-//                cabeçalho de indices gravado e uma posição valida para esse arquvo
+//cabeçalho de indices gravado e uma posição valida para esse arquvo
 //pós-requisitos: Retornar o valor mais a direita da arvoreB a partir da posição, e a posição para o arquivo
-//                de dados correspontende
+//de dados correspontende
 int sucessor(ARQ_BIN *arq_index, int posArquivo, int *ptDados){
     NO r;
     ler_bloco(arq_index, posArquivo, &r);
@@ -351,7 +351,7 @@ int sucessor(ARQ_BIN *arq_index, int posArquivo, int *ptDados){
 }
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
-//                cabeçalho de indices gravado e uma posição valida para esse arquvo
+//cabeçalho de indices gravado e uma posição valida para esse arquvo
 //pós-requisitos: Retorna 1 se o nó está com underflow, 0 caso não esteja
 int underflow(ARQ_BIN* arq_index, int posArquivo){
     int isUndeflow;
@@ -362,7 +362,7 @@ int underflow(ARQ_BIN* arq_index, int posArquivo){
 }
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
-//                cabeçalho de indices gravado e uma posição valida para esse arquvo
+//cabeçalho de indices gravado e uma posição valida para esse arquvo
 //pós-requisitos: Retorna 1 se o nó pode emprestar, 0 caso não possa
 int podeEmprestar(ARQ_BIN* arq_index, int posArquivo){
     NO r;
@@ -521,7 +521,7 @@ void merge(ARQ_BIN* arq_index, NO *r, int posUnderflow){
 }
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
-//                cabeçalho de indices gravado e uma posição valida para esse arquvo
+//cabeçalho de indices gravado e uma posição valida para esse arquvo
 //pós-requisitos: Info será removido da arvoreB
 void removeAux(ARQ_BIN* arq_index, int posArquvio, int info){
     if(posArquvio == -1){
@@ -555,7 +555,7 @@ void removeAux(ARQ_BIN* arq_index, int posArquvio, int info){
 
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
-//                cabeçalho de indices gravado
+//cabeçalho de indices gravado
 //pós-requisitos: Info será removido da arvoreB
 void remover(ARQ_BIN* arq_index, int info){
     if(arq_index->cab.raiz == -1){

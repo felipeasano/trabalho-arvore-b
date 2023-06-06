@@ -97,10 +97,7 @@ void busca_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
 
     printf("Entre com o codigo do produto: ");
     scanf("%d%*c", &codigo);
-    //printf("codigo: %d\n", codigo);
     int posicao_arvore = busca(arq_index, arq_index->cab.raiz, codigo, &pos);
-    //printf("posicao arvore = %d\n", posicao_arvore);
-    //printf("pos = %d\n", pos);
     if(posicao_arvore == -1){
         printf("Codigo nao cadastrado!\n");
         return;
@@ -134,13 +131,12 @@ void incluiLote(FILE *fr, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados) {
         }
 
         else if (strcmp(token, "R") == 0) {
-            /*int info;
+            int info;
             info = atoi(strtok(NULL, ";"));
-            removeProduto(info);*/
+            GerenciaRemocao(arq_indices, arq_dados, info);
         }
 
         else if (strcmp(token, "A") == 0) {
-            //printf("Alteracao\n");
             int info;
             char aux1[16] = "", aux2[16] = "", *ptr = text;
             ptr += 2;
@@ -162,6 +158,8 @@ void incluiLote(FILE *fr, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados) {
             printf("Entrada não reconhecida! \n");
         }
     }
+    system("cls");
+    printf("Arquivo carregado com sucesso!\n");
     fclose(fr);
 }
 
@@ -188,8 +186,6 @@ void loadPath(ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
 PRODUTO atualiza_preco(PRODUTO p){
     printf("Entre com o novo preco: ");
     scanf("%*c%s", p.preco);
-    //fgets(p.preco, 10, stdin);
-    //p.preco[strcspn(p.preco,"\n")] = '\0';
     return p;
 }
 
@@ -236,10 +232,6 @@ void atualizar_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int op){
 // Pré-condição: produto existente
 // Pós-condição: preco do produto alterado
 PRODUTO atualiza_preco_lote(PRODUTO p, char* str){
-    //printf("Entre com o novo preco: ");
-    //scanf("%*c%s", p.preco);
-    //fgets(p.preco, 10, stdin);
-    //p.preco[strcspn(p.preco,"\n")] = '\0';
     strcpy(p.preco, str);
     return p;
 }
@@ -248,8 +240,6 @@ PRODUTO atualiza_preco_lote(PRODUTO p, char* str){
 // Pré-condição: produto existente
 // Pós-condição: estoque do produto alterado
 PRODUTO atualiza_estoque_lote(PRODUTO p, int estoque){
-    //printf("Entre com o novo estoque: ");
-    //scanf("%d%*c", &p.estoque);
     p.estoque = estoque;
     return p;
 }
@@ -282,8 +272,8 @@ void atualizar_produto_lote(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int cod, int
 }
 
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
-//                cabeçalho de indices gravado, a posição que um nó de árvore b se encontra e
-//                um ponteiro para um arquivo aberto de indices
+//cabeçalho de indices gravado, a posição que um nó de árvore b se encontra e
+//um ponteiro para um arquivo aberto de indices
 //pós-requisitos: Imprime na tela os dados do arquivo de dados em ordem crescente de código
 void in_ordem(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int pos){
     if(pos == -1 ) {
