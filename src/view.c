@@ -3,6 +3,9 @@
 
 #include "view.h"
 
+// Realiza a impressão do menu na tela
+// Pré-condição: nenhuma
+// Pós-condição: menu impresso na tela
 void imprime_menu(){
     printf("\n\tMenu de Opcoes:\n\n");
     printf("1.  Cadastrar produto\n");
@@ -20,6 +23,10 @@ void imprime_menu(){
     printf("Digite a opcao desejada: ");
 }
 
+
+// Imprime os dados de um produto na tela
+// Pré-condição: Ponteiro válido para a estrutura de produto
+// Pós-condição: Dados do produto impressos na tela
 void imprime_produto(PRODUTO* produto) {
     printf("\ncodigo: %d\n",produto->cod );
     printf("Nome: %s\n", produto->nome);
@@ -29,6 +36,10 @@ void imprime_produto(PRODUTO* produto) {
     printf("Preco: %s\n", produto->preco);
 }
 
+
+// Cria um novo produto com base nas informações fornecidas pelo usuário
+// Pré-condição: nenhuma
+// Pós-condição: Retorna uma estrutura de produto preenchida com os dados fornecidos
 PRODUTO cria_novo_produto(){
     PRODUTO p;
     printf("Insira os dados do Produto:\n");
@@ -51,6 +62,10 @@ PRODUTO cria_novo_produto(){
     return p;
 }
 
+
+// Insere um novo produto nos arquivos de índices e dados
+// Pré-condição: Ponteiro válido para a estrutura de produto, ponteiros válidos para os arquivos de índices e dados
+// Pós-condição: O produto é inserido nos arquivos de índices e dados
 void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
 
     int pos_inserir = aloca_bloco(arq_dados);
@@ -69,6 +84,9 @@ void insere_produto(PRODUTO *p, ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
     grava_cabecalho(arq_dados);
 }
 
+// Realiza a busca por um produto nos arquivos de índices e dados
+// Pré-condição: Ponteiros válidos para os arquivos de índices e dados
+// Pós-condição: Os dados do produto são exibidos na tela, se encontrado
 void busca_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
     if(arq_index->cab.raiz == -1){
         printf("Nenhum produto cadastrado ainda...\n");
@@ -164,6 +182,9 @@ void loadPath(ARQ_BIN* arq_indices, ARQ_BIN* arq_dados){
     fclose(fr);
 }
 
+// Atualiza o preco de um produto
+// Pré-condição: produto existente
+// Pós-condição: preco do produto alterado
 PRODUTO atualiza_preco(PRODUTO p){
     printf("Entre com o novo preco: ");
     scanf("%*c%s", p.preco);
@@ -172,12 +193,18 @@ PRODUTO atualiza_preco(PRODUTO p){
     return p;
 }
 
+// Atualiza o estoque de um produto
+// Pré-condição: produto existente
+// Pós-condição: estoque do produto alterado
 PRODUTO atualiza_estoque(PRODUTO p){
     printf("Entre com o novo estoque: ");
     scanf("%d%*c", &p.estoque);
     return p;
 }
 
+// Atualiza os dados de um produto nos arquivos de índices e dados
+// Pré-condição: Ponteiros válidos para os arquivos de índices e dados, opção de atualização
+// Pós-condição: Os dados do produto são atualizados nos arquivos de índices e dados
 void atualizar_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int op){
     int cod;
     printf("Entre com o codigo: ");
@@ -205,6 +232,9 @@ void atualizar_produto(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int op){
     printf("Produto [%d] atualizado com sucesso!\n", cod);
 }
 
+// Atualiza o preco de um produto
+// Pré-condição: produto existente
+// Pós-condição: preco do produto alterado
 PRODUTO atualiza_preco_lote(PRODUTO p, char* str){
     //printf("Entre com o novo preco: ");
     //scanf("%*c%s", p.preco);
@@ -214,6 +244,9 @@ PRODUTO atualiza_preco_lote(PRODUTO p, char* str){
     return p;
 }
 
+// Atualiza o estoque de um produto
+// Pré-condição: produto existente
+// Pós-condição: estoque do produto alterado
 PRODUTO atualiza_estoque_lote(PRODUTO p, int estoque){
     //printf("Entre com o novo estoque: ");
     //scanf("%d%*c", &p.estoque);
@@ -221,6 +254,9 @@ PRODUTO atualiza_estoque_lote(PRODUTO p, int estoque){
     return p;
 }
 
+// Atualiza os dados de um produto em lote nos arquivos de índices e dados
+// Pré-condição: Ponteiros válidos para os arquivos de índices e dados, código do produto, valores auxiliares e opção de atualização
+// Pós-condição: Os dados do produto são atualizados nos arquivos de índices e dados
 void atualizar_produto_lote(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int cod, int aux1, char* aux2, int op){
     int pos_dados;
     int pos_arvore = busca(arq_index, arq_index->cab.raiz, cod, &pos_dados);
@@ -268,6 +304,10 @@ void in_ordem(ARQ_BIN* arq_index, ARQ_BIN* arq_dados, int pos){
     in_ordem(arq_index, arq_dados, r.filhos[i]);
 }
 
+
+// Lista todos os produtos presentes nos arquivos de índices e dados
+// Pré-condição: Ponteiros válidos para os arquivos de índices e dados
+// Pós-condição: Os produtos são listados na tela
 void listar_produtos(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
     if(arq_index->cab.raiz == -1){
         printf("Nenhum produto cadastrado ainda...\n");
@@ -276,6 +316,9 @@ void listar_produtos(ARQ_BIN* arq_index, ARQ_BIN* arq_dados){
     in_ordem(arq_index, arq_dados, arq_index->cab.raiz);
 }
 
+// Imprime as posições livres no arquivo de índices
+// Pré-condição: Ponteiro válido para o arquivo de índices
+// Pós-condição: As posições livres são impressas na tela
 void imprime_livre_index(ARQ_BIN* arq){
     if(arq->cab.livre == -1){
         printf("Lista de livres vazia!\n");
@@ -292,6 +335,9 @@ void imprime_livre_index(ARQ_BIN* arq){
     printf("\n");
 }
 
+// Imprime as posições livres no arquivo de dados
+// Pré-condição: Ponteiro válido para o arquivo de dados
+// Pós-condição: As posições livres são impressas na tela
 void imprime_livre_dados(ARQ_BIN* arq){
     if(arq->cab.livre == -1){
         printf("Lista de livres vazia!\n");
@@ -308,8 +354,9 @@ void imprime_livre_dados(ARQ_BIN* arq){
     printf("\n");
 }
 
-//pré-requisitos: Os arquvios devem abertos
-//pós-requisitos: Remove de ambos os arquivos os dados correspondente ao "codigo"
+// Função para gerenciar a remoção de um produto
+// Pré-condição: Ponteiros válidos para os arquivos de índices e dados, código do produto
+// Pós-condição: O produto é removido dos arquivos de índices e dados
 /*void GerenciaRemocao(ARQ_BIN *arq_index, ARQ_BIN *arq_dados, int codigo){
     int pos, posArquivo;
     

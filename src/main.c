@@ -16,7 +16,6 @@ int main(){
 
     int opcao;
     int info;
-    char path[40];
     PRODUTO p;
     
     while(1){

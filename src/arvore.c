@@ -24,6 +24,9 @@ int eh_underflow(NO* no){
     return no->numChaves < ORDEM/2;
 }
 
+// cria uma fila
+// Pré-condição: nenhuma
+// Pós-condição: fila criada
 FILA* cria_fila(){
     FILA *f = (FILA*)malloc(sizeof(FILA));
     f->inicio = NULL;
@@ -49,6 +52,9 @@ int fila_tam(FILA *f){
     return i;
 }
 
+// enfileira uma chave na fila
+// Pré-condição: fila existente e chave a ser inserida
+// Pós-condição: fila atualizada com chave
 void enqueue(FILA *f, int pos){
     NO_FILA* aux = (NO_FILA*)malloc(sizeof(NO_FILA));
     aux->pos = pos;
@@ -61,6 +67,9 @@ void enqueue(FILA *f, int pos){
     f->fim = aux;
 }
 
+// desenfileira uma chave na fila
+// Pré-condição: fila existente e chave a ser removida
+// Pós-condição: fila atualizada sem a chave
 int dequeue(FILA* f){
     NO_FILA* aux = f->inicio;
     int pos = f->inicio->pos;
@@ -72,6 +81,9 @@ int dequeue(FILA* f){
     return pos;
 }
 
+// Imprime um nó da árvore
+// Pré-condição: Ponteiro para nó válido
+// Pós-condição: Nenhuma
 void imprime_noB(NO* no){
     printf("-[");
     for(int i = 0; i < no->numChaves; i++){
@@ -81,6 +93,9 @@ void imprime_noB(NO* no){
     printf("]-");
 }
 
+// Imprime a árvore por níveis
+// Pré-condição: Arquivo de índices aberto e contendo pelo menos o cabeçalho gravado
+// Pós-condição: Impressão da árvore por níveis
 void imprime_por_niveis(ARQ_BIN* arq_index){
 
     if(arq_index->cab.raiz == -1){
@@ -116,15 +131,6 @@ void imprime_por_niveis(ARQ_BIN* arq_index){
     free(fila);
 }
 
-/*NO* cria_no(){
-    NO* no = (NO*)malloc(sizeof(NO));
-    no->numChaves = 0;
-    for(int i = 0; i < ORDEM; i++){
-        no->filhos[i] = -1;
-    }
-    return no;
-}*/
-
 //pré-requisitos: Recebe um ponteiro para um arquivo aberto de uma árvoreB que contém ao menos o
 //                cabeçalho de indices gravado
 //pós-requisitos: Retorna a posição onde o novo dado dever ser inserido
@@ -139,7 +145,9 @@ int retorna_livre(ARQ_BIN* arq_index){
         return retorno;
     }
 }
-
+// Cria um nó da arvore
+// Pré-condição: nenhuma
+// Pós-condição: nó da arvore criado
 NO cria_no_arvore(){
     NO no;
     no.numChaves = 0;
@@ -178,6 +186,9 @@ int split(ARQ_BIN* arq_index, int posX, int *m, int *m_ptDado) {
     return posY;
 }
 
+// Realiza uma busca na árvore para encontrar a posição de um dado específico
+// Pré-condição: Ponteiro para nó válido, informação a ser buscada, ponteiro para a variável que armazenará a posição encontrada
+// Pós-condição: Retorna 1 se a informação foi encontrada, caso contrário retorna 0 e atualiza a posição
 int buscaPos(NO* r, int info, int * pos) {
     for((*pos)=0; (*pos) < r->numChaves; (*pos)++)
         if(info == r->chaves[(*pos)])
@@ -187,6 +198,9 @@ int buscaPos(NO* r, int info, int * pos) {
     return 0;
 }
 
+// Adiciona um novo elemento à direita do nó na posição pos_inserido
+// Pré-condição: Ponteiro para nó válido, posição de inserção, chave, ponteiro de dado e posição do novo nó
+// Pós-condição: Nenhuma
 void adiciona_direita(NO* r, int pos_inserido, int chave, int ptdado, int pos_novo_no){
     int i;
     for(i = r->numChaves; i>pos_inserido; i--){
@@ -200,6 +214,10 @@ void adiciona_direita(NO* r, int pos_inserido, int chave, int ptdado, int pos_no
     r->numChaves++;
 }
 
+// Função auxiliar para inserção na árvore
+// Pré-condição: Ponteiro para arquivo de índices válido, posição do arquivo onde ocorrerá a inserção,
+// chave e ponteiro de dado a serem inseridos
+// Pós-condição: Retorna a posição onde a inserção foi realizada
 int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado){
     int pos;
     int foi_inserido = 0;
@@ -225,6 +243,9 @@ int insere_aux(ARQ_BIN* arq_index, int pos_arquivo, int chave, int ptdado){
     return foi_inserido;
 }
 
+// Insere um novo elemento na árvore
+// Pré-condição: Ponteiro para arquivo de índices válido, chave e ponteiro de dado a serem inseridos
+// Pós-condição: Retorna a posição onde a inserção foi realizada
 int insere(ARQ_BIN* arq_index, int chave, int ptdado){
     int foi_inserido = 0;
     if(arq_index->cab.raiz == -1){
@@ -272,6 +293,10 @@ int insere(ARQ_BIN* arq_index, int chave, int ptdado){
     return foi_inserido;
 }
 
+// Realiza uma busca na árvore para encontrar a posição de um dado específico
+// Pré-condição: Ponteiro para arquivo de índices válido, posição do arquivo onde inicia a busca,
+// código a ser buscado, ponteiro para a variável que armazenará a posição encontrada
+// Pós-condição: Retorna 1 se o código foi encontrado, caso contrário retorna 0 e atualiza a posição
 int busca(ARQ_BIN* arq_index, int pos_arq, int cod, int *pos){
     if(pos_arq == -1){
         return -1;
