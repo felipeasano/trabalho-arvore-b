@@ -41,7 +41,7 @@ int main(){
                 //removerProduto();
                 printf("Entre com o Codigo do produto a ser removido: ");
                 scanf("%d*%c", &info);
-                //GerenciaRemocao(&arq_indices, &arq_dados, info);
+                GerenciaRemocao(&arq_indices, &arq_dados, info);
                 break;
             case 3:
                 //atualizarPreco();

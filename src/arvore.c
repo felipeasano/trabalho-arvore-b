@@ -319,7 +319,7 @@ int busca(ARQ_BIN* arq_index, int pos_arq, int cod, int *pos){
 
 //pré-requisitos: Ponteiro não nulo para nó da árvoreB
 //pós-requisitos: Faz o "shift-left" a partir da posição indicada e retorna o filho que não faz mais parte
-/*int retiraEsquerda(NO *r, int pos){
+int retiraEsquerda(NO *r, int pos){
     int i;
     int aux;
     aux = r->filhos[pos];
@@ -574,6 +574,6 @@ void remover(ARQ_BIN* arq_index, int info){
         arq_index->cab.raiz = aux;
     }
     grava_cabecalho(arq_index);
-}*/
+}
 
 #endif

@@ -357,7 +357,7 @@ void imprime_livre_dados(ARQ_BIN* arq){
 // Função para gerenciar a remoção de um produto
 // Pré-condição: Ponteiros válidos para os arquivos de índices e dados, código do produto
 // Pós-condição: O produto é removido dos arquivos de índices e dados
-/*void GerenciaRemocao(ARQ_BIN *arq_index, ARQ_BIN *arq_dados, int codigo){
+void GerenciaRemocao(ARQ_BIN *arq_index, ARQ_BIN *arq_dados, int codigo){
     int pos, posArquivo;
     
     posArquivo = busca(arq_index, arq_index->cab.raiz, codigo, &pos);
@@ -375,7 +375,7 @@ void imprime_livre_dados(ARQ_BIN* arq){
     grava_cabecalho(arq_dados);
     grava_bloco(arq_dados, &p, r.registro[pos]);
     printf("Codigo [%d] excluido com sucesso\n", codigo);
-}*/
+}
 
 
 #endif

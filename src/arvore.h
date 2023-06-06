@@ -96,7 +96,7 @@ int insere(ARQ_BIN* arq_index, int chave, int ptdado);
 // Pós-condição: Retorna 1 se o código foi encontrado, caso contrário retorna 0 e atualiza a posição
 int busca(ARQ_BIN* arq_index, int pos_arq, int cod, int *pos);
 
-//void remover(ARQ_BIN* arq_index, int info);
+void remover(ARQ_BIN* arq_index, int info);
 
 
 #endif
